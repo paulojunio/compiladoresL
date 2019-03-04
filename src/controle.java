@@ -1,3 +1,4 @@
+//Verificacoes a serem feitas dos digitos
 public class controle{
 
     public static boolean ELetra(char c){
@@ -9,7 +10,11 @@ public class controle{
     }
 
     public static boolean EDelimitador(char c){
-        return c == ' ' || c == '/*' || c == '//' || c == '\n';
+        return c == ' ' || c == '\n';
+    }
+
+    public static boolean EComentario(char c){
+        return c == '/';
     }
         
 }

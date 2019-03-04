@@ -1,5 +1,5 @@
 import java.io.*;
-
+//teste do analisador lexico
 public class teste2{
     public static void main(String[]args){
         try{

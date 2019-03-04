@@ -1,3 +1,4 @@
+//Classe referente ao simbolo
 public class Simbolo{
 
     public byte token;

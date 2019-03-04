@@ -1,4 +1,4 @@
-
+//Teste da tabela de simbolos para printar
 import java.io.*;
 public class teste1{
     public static void main(String[]args){

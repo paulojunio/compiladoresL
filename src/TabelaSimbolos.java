@@ -1,6 +1,6 @@
 import java.util.HashMap;
 
-
+//Criacao de tabela de simbolos
 public class TabelaSimbolos{
     public HashMap<String, Simbolo> tabela = new HashMap<>();
 

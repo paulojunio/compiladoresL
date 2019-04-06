@@ -1,5 +1,5 @@
 //Verificacoes a serem feitas dos digitos
-public class controle{
+public class Controle{
 
     public static char sublinhado = '_';
     public static char pontoFinal = '.';

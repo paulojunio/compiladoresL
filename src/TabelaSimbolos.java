@@ -98,6 +98,18 @@ public class TabelaSimbolos{
         return tabela.get(lexema);
     }
 
+    public Simbolo inserir_identificador(String lexema) {
+        Simbolo simbolo = new Simbolo (identificador,lexema);
+        tabela.put(lexema,simbolo);
+        return simbolo;
+    }
+
+    /*public Simbolo inserir_constante(String lexema) {
+        Simbolo simbolo = new Simbolo (constante,lexema);
+        tabela.put(lexema,simbolo);
+        return simbolo;
+    }*/
+
     public void print_tabela(){
         int i = 0;
         for (String lexema : tabela.keySet()) {

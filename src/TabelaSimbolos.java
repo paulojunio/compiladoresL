@@ -51,10 +51,10 @@ public class TabelaSimbolos{
 
     public TabelaSimbolos(){
         tabela.put("id", new Simbolo(identificador, "id"));
-        tabela.put("Var", new Simbolo(VAR, "Var"));
+        tabela.put("var", new Simbolo(VAR, "var"));
         tabela.put("integer", new Simbolo(INTEGER, "integer"));
         tabela.put("char", new Simbolo(CHAR, "char"));
-        tabela.put("For", new Simbolo(FOR, "For"));
+        tabela.put("for", new Simbolo(FOR, "for"));
         tabela.put("if", new Simbolo(IF, "if"));
         tabela.put("else", new Simbolo(ELSE, "else"));
 
@@ -94,13 +94,13 @@ public class TabelaSimbolos{
         tabela.put("const", new Simbolo(CONST, "const"));
     }
 
-    public Simbolo busca_lexema(String lexema) {
-        return tabela.get(lexema);
+    public Simbolo buscaLexema(String lexema) {
+        return tabela.get(lexema.toLowerCase());
     }
 
-    public Simbolo inserir_identificador(String lexema) {
-        Simbolo simbolo = new Simbolo (identificador,lexema);
-        tabela.put(lexema,simbolo);
+    public Simbolo inserirIdentificador(String lexema) {
+        Simbolo simbolo = new Simbolo (identificador,lexema.toLowerCase());
+        tabela.put(lexema.toLowerCase(),simbolo);
         return simbolo;
     }
 
@@ -110,7 +110,7 @@ public class TabelaSimbolos{
         return simbolo;
     }*/
 
-    public void print_tabela(){
+    public void printTabela(){
         int i = 0;
         for (String lexema : tabela.keySet()) {
             System.out.println(tabela.get(lexema).token + " " + tabela.get(lexema).lexema);

@@ -3,17 +3,24 @@ import java.io.*;
 public class AnalisadorLexico{
 
     public BufferedReader codigo;
-    public boolean errorCompila;
-    public boolean devolve;
+    public TabelaSimbolos tabelaSimbolos;
+
     public String lexema;
     public char ultimaLetra;
+    public int linha;
 
+    public boolean errorCompilacao;
+    public boolean devolve;
+    public boolean fimDeArquivo;
 
 
 
 
     public AnalisadorLexico(BufferedReader bufferedReader){
         this.codigo = bufferedReader;
+        ultimaLetra = ' ';
+        linha = 1;
+        errorCompilacao = devolve = fimDeArquivo = false;
     }
 
     /* Teste
@@ -22,7 +29,7 @@ public class AnalisadorLexico{
             int intcode = this.codigo.read();
             while (intcode != -1){
                 System.out.println( " " + (char)intcode);
-                if (!(controle.EDelimitador((char)intcode))){
+                if (!(Controle.EDelimitador((char)intcode))){
                     char_formato((char)intcode);
                 }
                 intcode = this.codigo.read();
@@ -33,19 +40,20 @@ public class AnalisadorLexico{
     }
 
     public void char_formato(char c){
-        if (controle.ELetra(c)){
+        if (Controle.ELetra(c)){
             System.out.println("É letra");
-        }else if(controle.EDigito(c)){
+        }else if(Controle.EDigito(c)){
 
         }
     } */
 
-    public void maquinaDeEstados() {
+    public Simbolo maquinaDeEstados() {
         int estadoInicial = 0;
         int estado = estadoInicial;
-        int estadoFinal = 18;
-
-        while(estadoInicial != estadoFinal) {
+        int estadoFinal = 16;
+        lexema = "";
+        
+        while(estado != estadoFinal) {
             if(estado == 0) {
                 estado = estado0();
             }else if(estado == 1) {
@@ -82,116 +90,139 @@ public class AnalisadorLexico{
                 //final
             }
         }
+
+        if(errorCompilacao) {
+            System.exit(0); //Erro, parar programa.
+        }
+        TabelaSimbolos tabelaSimbolos = new TabelaSimbolos();
+
+        if(fimDeArquivo == false) {
+            if(tabelaSimbolos.buscaLexema(lexema) == null) {
+                if(lexema.charAt(0) == '"' || lexema.charAt(0) == '\'' || Controle.EDigito(lexema.charAt(0))) {
+                    System.out.println(lexema + " Achou uma constante.");
+                    //Inserir constante?
+                }else {
+                    System.out.println(lexema + " Achou um indetificador.");
+                    return tabelaSimbolos.inserirIdentificador(lexema);
+                }
+            }else{
+                return tabelaSimbolos.buscaLexema(lexema);
+            }
+        }else{
+            //Criar simbolo EOF?
+        }
+
+        return null;
     }
 
     public int estado0(){
         lexema = "";
         char caracter = lerCaracter();
-        if(controle.ECaracterEspecialEToken(caracter) == true) {
+        if(Controle.ECaracterEspecialEToken(caracter) == true) {
             lexema += caracter;
-            if(controle.barra == caracter) {
+            if(Controle.barra == caracter) {
                 return 1;      
-            }else if(controle.apostofro == caracter) {
+            }else if(Controle.apostofro == caracter) {
                 return 5;
-            }else if(controle.aspas == caracter) {
+            }else if(Controle.aspas == caracter) {
                 return 10;
-            }else if(controle.menor == caracter) {
+            }else if(Controle.menor == caracter) {
                 return 12;
-            }else if(controle.maior == caracter) {
+            }else if(Controle.maior == caracter) {
                 return 13;
-            }else if (controle.sublinhado == caracter || controle.pontoFinal == caracter) {
+            }else if (Controle.sublinhado == caracter || Controle.pontoFinal == caracter) {
                 return 14;
             }
             return 16;
-        }else if(controle.EDigito(caracter) == true) {
+        }else if(Controle.EDigito(caracter) == true) {
             lexema += caracter;
             if(caracter == '0') {
                 return 7;
             }
             return 4;
-        }else if(controle.ELetra(caracter) == true ) {
+        }else if(Controle.ELetra(caracter) == true ) {
             lexema += caracter;
             return 15;
-        }else if(controle.quebraDeLinhas(caracter) == true) {
-            if(controle.barraN == caracter || controle.novalinha == caracter) {
-                //linha++;
+        }else if(Controle.quebraDeLinhas(caracter) == true) {
+            if(Controle.barraN == caracter || Controle.novalinha == caracter) {
+                linha++;
             }
             return 0;
-        }else if(controle.fimDeArquivo == caracter){
-            //fimDeArquivo = true;
+        }else if(Controle.fimDeArquivo == caracter){
+            fimDeArquivo = true;
             return 16;
         }
-        //mostrarErro(caracter);
+        mostrarErro(caracter);
         return 16;
     }
 
     public int estado1() {
         char caracter = lerCaracter();
-        if(controle.asterisco == caracter) {
+        if(Controle.asterisco == caracter) {
             //lexema += caracter;
             return 2;
-        }else if(controle.ECaracterValido(caracter) == true) {
+        }else if(Controle.ECaracterValido(caracter) == true) {
             devolve = true;
             return 13;
         }
-        //mostrarErro(caracter);
+        mostrarErro(caracter);
         return 16;
     }
 
     public int estado2() {
         char caracter = lerCaracter();
-        if(controle.asterisco == caracter) {
+        if(Controle.asterisco == caracter) {
             return 3;
-        }else if(controle.ECaracterValido(caracter) == true) {
+        }else if(Controle.ECaracterValido(caracter) == true) {
             return 2;
         }
-        //mostrarErro(caracter);
+        mostrarErro(caracter);
         return 16;
     }
 
     public int estado3() {
         char caracter = lerCaracter();
-        if(controle.asterisco == caracter){
+        if(Controle.asterisco == caracter){
             return 3;
-        }else if(controle.barra == caracter) {
+        }else if(Controle.barra == caracter) {
             return 0;
-        }else if(controle.ECaracterValido(caracter) == true) {
+        }else if(Controle.ECaracterValido(caracter) == true) {
             return 2;
         }
-        //mostrarErro(caracter);
+        mostrarErro(caracter);
         return 16;
     }
     
     public int estado4() {
         char caracter = lerCaracter();
-        if(controle.EDigito(caracter) == true) {
+        if(Controle.EDigito(caracter) == true) {
             lexema += caracter;
             return 4;
-        }else if(controle.ECaracterValido(caracter) == true) {
+        }else if(Controle.ECaracterValido(caracter) == true) {
             devolve = true;
             return 16;
         }
-        //mostrarErro(caracter);
+        mostrarErro(caracter);
         return 16;
     }
 
     public int estado5() {
         char caracter = lerCaracter();
-        if(controle.EDigito(caracter) || controle.ELetra(caracter) || controle.ECaracterEspecial(caracter)) {
+        if(Controle.EDigito(caracter) || Controle.ELetra(caracter) || Controle.ECaracterEspecial(caracter)) {
             lexema += caracter;
             return 6;
         }
-        //mostrarErro(caracter);
+        mostrarErro(caracter);
         return 16;
     }
 
     public int estado6() {
         char caracter = lerCaracter();
-        if(controle.apostofro == caracter) {
+        if(Controle.apostofro == caracter) {
             lexema += caracter;
             return 16;
         }
-        //mostrarErro(caracter);
+        mostrarErro(caracter);
         return 16;
     }
 
@@ -201,109 +232,109 @@ public class AnalisadorLexico{
             lexema += caracter;
             return 8;
         }
-        //mostrarErro(caracter);
+        mostrarErro(caracter);
         return 16;
     }
     
     public int estado8() {
         char caracter = lerCaracter();
-        if(controle.EDigito(caracter) || controle.EHexadecimal(caracter)) {
+        if(Controle.EDigito(caracter) || Controle.EHexadecimal(caracter)) {
             lexema += caracter;
             return 9;
         }
-        //mostrarErro(caracter);
+        mostrarErro(caracter);
         return 16;
     }
 
     public int estado9() {
         char caracter = lerCaracter();
-        if(controle.EDigito(caracter) || controle.EHexadecimal(caracter)) {
+        if(Controle.EDigito(caracter) || Controle.EHexadecimal(caracter)) {
             lexema += caracter;
             return 16;
         }
-        //mostrarErro(caracter);
+        mostrarErro(caracter);
         return 16;
     }
 
     public int estado10() {
         char caracter = lerCaracter();
-        if(controle.EDigito(caracter) || controle.ELetra(caracter) || controle.ECaracterEspecial(caracter)) {
-            if(controle.aspas != caracter && controle.barraN != caracter && controle.novalinha != caracter) {
+        if(Controle.EDigito(caracter) || Controle.ELetra(caracter) || Controle.ECaracterEspecial(caracter)) {
+            if(Controle.aspas != caracter && Controle.barraN != caracter && Controle.novalinha != caracter) {
                 lexema += caracter;
                 return 11;
             }
         }
-        //mostrarErro(caracter);
+        mostrarErro(caracter);
         return 16;
     }
 
     public int estado11() {
         char caracter = lerCaracter();
-        if(controle.aspas == caracter) {
+        if(Controle.aspas == caracter) {
             lexema += caracter;
             return 16;
-        }else if(controle.EDigito(caracter) || controle.ELetra(caracter) || controle.ECaracterEspecial(caracter)) {
-            if(controle.aspas != caracter && controle.barraN != caracter && controle.novalinha != caracter) {
+        }else if(Controle.EDigito(caracter) || Controle.ELetra(caracter) || Controle.ECaracterEspecial(caracter)) {
+            if(Controle.aspas != caracter && Controle.barraN != caracter && Controle.novalinha != caracter) {
                 lexema += caracter;
                 return 11;
             }
         }
-        //mostrarErro(caracter);
+        mostrarErro(caracter);
         return 16;
     }
     
     public int estado12() {
         char caracter = lerCaracter();
-        if(controle.maior == caracter) {
+        if(Controle.maior == caracter) {
             lexema += caracter;
             return 16;
-        }else if(controle.igual == caracter) {
+        }else if(Controle.igual == caracter) {
             lexema += caracter;
             return 16;
-        }else if(controle.ECaracterValido(caracter) == true) {
+        }else if(Controle.ECaracterValido(caracter) == true) {
             devolve = true;
             return 16;
         }
-        //mostrarErro(caracter);
+        mostrarErro(caracter);
         return 16;
     }
     
     public int estado13() {
         char caracter = lerCaracter();
-        if(controle.igual == caracter) {
+        if(Controle.igual == caracter) {
             lexema += caracter;
             return 16;
-        }else if(controle.ECaracterValido(caracter) == true) {
+        }else if(Controle.ECaracterValido(caracter) == true) {
             devolve = true;
             return 16;
         }
-        //mostrarErro(caracter);
+        mostrarErro(caracter);
         return 16;
     }
 
     public int estado14() {
         char caracter = lerCaracter();
-        if (controle.sublinhado == caracter || controle.pontoFinal == caracter) {
+        if (Controle.sublinhado == caracter || Controle.pontoFinal == caracter) {
             lexema += caracter;
             return 14;
-        }else if(controle.ELetra(caracter) == true || controle.EDigito(caracter) == true) {
+        }else if(Controle.ELetra(caracter) == true || Controle.EDigito(caracter) == true) {
             lexema += caracter;
             return 15;
         }
-        //mostrarErro(caracter);
+        mostrarErro(caracter);
         return 16;
     }
 
     public int estado15() {
         char caracter = lerCaracter();
-        if(controle.ELetra(caracter) == true || controle.EDigito(caracter) == true || controle.sublinhado == caracter || controle.pontoFinal == caracter) {
+        if(Controle.ELetra(caracter) == true || Controle.EDigito(caracter) == true || Controle.sublinhado == caracter || Controle.pontoFinal == caracter) {
             lexema += caracter;
             return 15;
-        }else if(controle.ECaracterValido(caracter) == true) {
+        }else if(Controle.ECaracterValido(caracter) == true) {
             devolve = true;
             return 16;
         }
-        //mostrarErro(caracter);
+        mostrarErro(caracter);
         return 16;
     }
     public char lerCaracter() {
@@ -321,13 +352,15 @@ public class AnalisadorLexico{
     }
 
     public void mostrarErro(char caracter) {
-        
-        if() {
+        lexema += caracter;
+        if(Controle.ECaracterValido(caracter) == true) {
+            System.out.println("linha" + ":" + "lexema nao identificado" + '[' + lexema + "].");
+        }else{
+            System.out.println("linha" + ":" + "caractere invalido.");
+        }
 
-        }else if(){
-
-        }else if(){
-
+        if(Controle.fimDeArquivo == caracter) {
+            System.out.println("linha" + ":" + "fim de arquivo nao esperado.");
         }
     }
 }

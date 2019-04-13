@@ -32,7 +32,7 @@ public class Controle{
     public static char barraN = 10;
     public static char novalinha = 11;
     public static char cursoInicio = 13;
-    public static char fimDeArquivo = 23;
+    public static char fimDeArquivo = 65535;
     public static char espaco = 32;
     
     

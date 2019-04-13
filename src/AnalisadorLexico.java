@@ -8,6 +8,7 @@ public class AnalisadorLexico{
     public String lexema;
     public char ultimaLetra;
     public int linha;
+    public String tipoConst;
 
     public boolean errorCompilacao;
     public boolean devolve;
@@ -16,8 +17,9 @@ public class AnalisadorLexico{
 
 
 
-    public AnalisadorLexico(BufferedReader bufferedReader){
+    public AnalisadorLexico(BufferedReader bufferedReader, TabelaSimbolos tabelaSimbolos){
         this.codigo = bufferedReader;
+        this.tabelaSimbolos = tabelaSimbolos;
         ultimaLetra = ' ';
         linha = 1;
         errorCompilacao = devolve = fimDeArquivo = false;
@@ -92,27 +94,31 @@ public class AnalisadorLexico{
         }
 
         if(errorCompilacao) {
-            System.exit(0); //Erro, parar programa.
+            //System.exit(0); //Erro, parar programa.
         }
-        TabelaSimbolos tabelaSimbolos = new TabelaSimbolos();
+        
 
         if(fimDeArquivo == false) {
             if(tabelaSimbolos.buscaLexema(lexema) == null) {
                 if(lexema.charAt(0) == '"' || lexema.charAt(0) == '\'' || Controle.EDigito(lexema.charAt(0))) {
-                    System.out.println(lexema + " Achou uma constante.");
-                    //Inserir constante?
+                    //System.out.println(lexema + " Achou uma constante.");
+                    Simbolo simboloConst = new Simbolo((byte)37,lexema,tipoConst);
+                    System.out.println("Lexema(CONST) : " + lexema + " Tipo : " + tipoConst + " Tamanho = 0");
+                    return simboloConst;
                 }else {
-                    System.out.println(lexema + " Achou um indetificador.");
-                    return tabelaSimbolos.inserirIdentificador(lexema);
+                    //System.out.println(lexema + " Achou um indetificador.");
+                    Simbolo simboloIdent = tabelaSimbolos.inserirIdentificador(lexema);
+                    System.out.println("Lexema(ID) : " + lexema);
+                    return simboloIdent;
                 }
             }else{
+                System.out.println("Lexema(PR) : " + lexema);
                 return tabelaSimbolos.buscaLexema(lexema);
             }
         }else{
-            //Criar simbolo EOF?
+            System.out.println("Fim de arquivo : " + linha);
+            return null;
         }
-
-        return null;
     }
 
     public int estado0(){
@@ -123,8 +129,10 @@ public class AnalisadorLexico{
             if(Controle.barra == caracter) {
                 return 1;      
             }else if(Controle.apostofro == caracter) {
+                tipoConst = "Character";
                 return 5;
             }else if(Controle.aspas == caracter) {
+                tipoConst = "String";
                 return 10;
             }else if(Controle.menor == caracter) {
                 return 12;
@@ -137,8 +145,10 @@ public class AnalisadorLexico{
         }else if(Controle.EDigito(caracter) == true) {
             lexema += caracter;
             if(caracter == '0') {
+                tipoConst = "Character";
                 return 7;
             }
+            tipoConst = "Integer";
             return 4;
         }else if(Controle.ELetra(caracter) == true ) {
             lexema += caracter;
@@ -159,7 +169,6 @@ public class AnalisadorLexico{
     public int estado1() {
         char caracter = lerCaracter();
         if(Controle.asterisco == caracter) {
-            //lexema += caracter;
             return 2;
         }else if(Controle.ECaracterValido(caracter) == true) {
             devolve = true;
@@ -231,6 +240,12 @@ public class AnalisadorLexico{
         if(caracter == 'x' || caracter == 'X') {
             lexema += caracter;
             return 8;
+        }else if(Controle.EDigito(caracter) == true) {
+            lexema += caracter;
+            return 4;
+        }else if(Controle.ECaracterValido(caracter)) {
+            devolve = true;
+            return 16;
         }
         mostrarErro(caracter);
         return 16;
@@ -258,7 +273,7 @@ public class AnalisadorLexico{
 
     public int estado10() {
         char caracter = lerCaracter();
-        if(Controle.EDigito(caracter) || Controle.ELetra(caracter) || Controle.ECaracterEspecial(caracter)) {
+        if(Controle.EDigito(caracter) || Controle.ELetra(caracter) || Controle.ECaracterEspecial(caracter) || caracter == Controle.espaco) {
             if(Controle.aspas != caracter && Controle.barraN != caracter && Controle.novalinha != caracter) {
                 lexema += caracter;
                 return 11;
@@ -273,7 +288,7 @@ public class AnalisadorLexico{
         if(Controle.aspas == caracter) {
             lexema += caracter;
             return 16;
-        }else if(Controle.EDigito(caracter) || Controle.ELetra(caracter) || Controle.ECaracterEspecial(caracter)) {
+        }else if(Controle.EDigito(caracter) || Controle.ELetra(caracter) || Controle.ECaracterEspecial(caracter) || caracter == Controle.espaco) {
             if(Controle.aspas != caracter && Controle.barraN != caracter && Controle.novalinha != caracter) {
                 lexema += caracter;
                 return 11;
@@ -331,6 +346,7 @@ public class AnalisadorLexico{
             lexema += caracter;
             return 15;
         }else if(Controle.ECaracterValido(caracter) == true) {
+            
             devolve = true;
             return 16;
         }
@@ -341,8 +357,9 @@ public class AnalisadorLexico{
         try {
             if(devolve == true) {
                 devolve = false; //Ultimo caracter
+                
             }else{
-                return (char) codigo.read(); //Novo caracter
+                ultimaLetra = (char) codigo.read(); //Novo caracter 
             }
         }catch(Exception e){
             System.out.println("Error ao acessar arquivo");
@@ -354,13 +371,14 @@ public class AnalisadorLexico{
     public void mostrarErro(char caracter) {
         lexema += caracter;
         if(Controle.ECaracterValido(caracter) == true) {
-            System.out.println("linha" + ":" + "lexema nao identificado" + '[' + lexema + "].");
+            System.out.println(linha + ":" + "lexema nao identificado" + '[' + lexema + "].");
         }else{
-            System.out.println("linha" + ":" + "caractere invalido.");
+            System.out.println(linha + ":" + "caractere invalido." + " Qual caracter :" + lexema + " Digito: " + (int)lexema.charAt(0));
         }
 
         if(Controle.fimDeArquivo == caracter) {
-            System.out.println("linha" + ":" + "fim de arquivo nao esperado.");
+            System.out.println(linha + ":" + "fim de arquivo nao esperado.");
         }
+        errorCompilacao = true;
     }
 }

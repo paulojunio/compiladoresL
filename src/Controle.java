@@ -53,14 +53,14 @@ public class Controle{
         c == doisPontos || c == abreParenteses || c == fechaParenteses || c == abreColchetes || c == fechaColchetes ||
         c == abreChaves || c == fechaChaves || c == mais || c == menor || c == aspas || c == apostofro ||
         c == barra || c == porcentagem || c == circunflexo || c == arroba || c == esclamacao || c == interrogacao ||
-        c == menor || c == maior || c == igual || c == asterisco;
+        c == menor || c == maior || c == igual || c == asterisco || c == menos;
     }
 
     public static boolean ECaracterEspecialEToken(char c) { // Caracteres especiais
         return c == sublinhado || c == pontoFinal || c == virgula || c == pontoEVirgula ||
         c == abreParenteses || c == fechaParenteses || c == abreColchetes || c == fechaColchetes ||
         c == abreChaves || c == fechaChaves || c == mais || c == menor || c == aspas || c == apostofro ||
-        c == barra || c == porcentagem || c == menor || c == maior || c == igual || c == asterisco;
+        c == barra || c == porcentagem || c == menor || c == maior || c == igual || c == asterisco|| c == menos;
     }
     public static boolean quebraDeLinhas(char c) { // formatacao de texto
         return c == tab || c == barraN || c == novalinha || c == cursoInicio || c == espaco;

@@ -94,7 +94,11 @@ public class AnalisadorLexico{
         }
 
         if(errorCompilacao) {
+<<<<<<< HEAD
             System.exit(0); //Erro, parar programa.
+=======
+            //System.exit(0); //Erro, parar programa.
+>>>>>>> 9c1a3efa2fd420661dcb926511350429a6be15de
         }
         
 
@@ -117,7 +121,10 @@ public class AnalisadorLexico{
             }
         }else{
             System.out.println("Fim de arquivo : " + linha);
+<<<<<<< HEAD
             System.exit(0);
+=======
+>>>>>>> 9c1a3efa2fd420661dcb926511350429a6be15de
             return null;
         }
     }

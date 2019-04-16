@@ -22,16 +22,23 @@ public class AnalisadorSintatico{
 			this.simbolo = analisadorlexico.maquinaDeEstados();
 		}else{
 			if(analisadorlexico.fimDeArquivo){
+<<<<<<< HEAD
 				System.out.println(analisadorlexico.linha + " : fim de arquivo não esperado");
 				System.exit(0);
 			}else{
 				System.out.println(analisadorlexico.linha + " : token não esperado [ " + this.simbolo.lexema + " ] ");
 				System.exit(0);
+=======
+				MensagemdeErro.printErro( MensagemdeErro.FIM_DE_ARQUIVO_INESPERADO , analisadorlexico.linha, null);
+			}else{
+				MensagemdeErro.printErro( MensagemdeErro.TOKEN_INESPERADO, analisadorlexico.linha, String.valueOf(this.simbolo.lexema));
+>>>>>>> 9c1a3efa2fd420661dcb926511350429a6be15de
 			}
 		}
 	}
 
 	public void S(){
+<<<<<<< HEAD
 		//System.out.println("Comecou denovo");
 		if (this.simbolo.token == this.tabelasimbolos.VAR || this.simbolo.token == this.tabelasimbolos.CONST){
 			while(this.simbolo.token == this.tabelasimbolos.VAR || this.simbolo.token == this.tabelasimbolos.CONST){
@@ -69,6 +76,20 @@ public class AnalisadorSintatico{
 			
 			System.out.println(analisadorlexico.linha + " : token não esperado [ " + this.simbolo.lexema + " ] ");
 			System.exit(0);
+=======
+		while(this.simbolo.token == this.tabelasimbolos.VAR || this.simbolo.token == this.tabelasimbolos.CONST){
+			System.out.println("Entrou");
+			D();
+		}
+  
+		while(this.simbolo.token == this.tabelasimbolos.identificador || 
+			  this.simbolo.token == this.tabelasimbolos.FOR || 
+			  this.simbolo.token == this.tabelasimbolos.IF || 
+			  this.simbolo.token == this.tabelasimbolos.READLN ||
+			  this.simbolo.token == this.tabelasimbolos.WRITE){
+			System.out.println("OII");
+			//B();
+>>>>>>> 9c1a3efa2fd420661dcb926511350429a6be15de
 		}
 	}
 
@@ -76,6 +97,10 @@ public class AnalisadorSintatico{
 		if (this.simbolo.token == this.tabelasimbolos.VAR){
 			CasaToken(this.tabelasimbolos.VAR);
 			while(this.simbolo.token == this.tabelasimbolos.INTEGER || this.simbolo.token == this.tabelasimbolos.CHAR){
+<<<<<<< HEAD
+=======
+				System.out.println("Entrou 2!!");
+>>>>>>> 9c1a3efa2fd420661dcb926511350429a6be15de
 				T();
 			}
 
@@ -90,9 +115,12 @@ public class AnalisadorSintatico{
 			}
 			CasaToken(this.tabelasimbolos.constante);
 			CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+<<<<<<< HEAD
 		}else{
 			System.out.println(analisadorlexico.linha + " : token não esperado [ " + this.simbolo.lexema + " ] ");
 			System.exit(0);
+=======
+>>>>>>> 9c1a3efa2fd420661dcb926511350429a6be15de
 		}
 	}
 
@@ -117,12 +145,21 @@ public class AnalisadorSintatico{
 		while(this.simbolo.token == this.tabelasimbolos.VIRGULA){
 			CasaToken(this.tabelasimbolos.VIRGULA);
 			CasaToken(this.tabelasimbolos.identificador);
+<<<<<<< HEAD
 			if (this.simbolo.token == this.tabelasimbolos.IGUAL || this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
 				E();
 			}
 		}
 		CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
 		//System.out.println("AQUI");
+=======
+			E();
+		}
+		CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
+
+		
+		//if (this.simbolo.token == this.)
+>>>>>>> 9c1a3efa2fd420661dcb926511350429a6be15de
 	}
 
 	/*
@@ -142,13 +179,17 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);	
 			CasaToken(this.tabelasimbolos.constante);
 			CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
+<<<<<<< HEAD
 		}else{
 			System.out.println(analisadorlexico.linha + " : token não esperado [ " + this.simbolo.lexema + " ] ");
 			System.exit(0);
+=======
+>>>>>>> 9c1a3efa2fd420661dcb926511350429a6be15de
 		}
 	}
 
 	public void B(){
+<<<<<<< HEAD
 		//System.out.println("AHAHAHA");
 		if(this.simbolo.token == this.tabelasimbolos.identificador){
 			CasaToken(this.tabelasimbolos.identificador);
@@ -156,6 +197,13 @@ public class AnalisadorSintatico{
 				CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
 				Exp();
 				CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
+=======
+		if(this.simbolo.token == this.tabelasimbolos.identificador){
+			CasaToken(this.tabelasimbolos.identificador);
+			if(this.simbolo.tooken == this.tabelasimbolos.COLCHETE_ABERTO){
+				CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
+				Exp();
+>>>>>>> 9c1a3efa2fd420661dcb926511350429a6be15de
 			}
 			CasaToken(this.tabelasimbolos.IGUAL);
 			Exp();
@@ -172,11 +220,15 @@ public class AnalisadorSintatico{
 				CasaToken(this.tabelasimbolos.STEP);
 				CasaToken(this.tabelasimbolos.constante);
 			}
+<<<<<<< HEAD
 			CasaToken(this.tabelasimbolos.DO);
+=======
+>>>>>>> 9c1a3efa2fd420661dcb926511350429a6be15de
 			C();
 
 
 		}else if(this.simbolo.token == this.tabelasimbolos.IF){
+<<<<<<< HEAD
 
 			CasaToken(this.tabelasimbolos.IF);
 			Exp();
@@ -184,6 +236,12 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.THEN);
 			C();
 			//System.out.println("ESTOU e sOU");
+=======
+			CasaToken(this.tabelasimbolos.IF);
+			Exp();
+			CasaToken(this.tabelasimbolos.THEN);
+			C();
+>>>>>>> 9c1a3efa2fd420661dcb926511350429a6be15de
 			if (this.simbolo.token == this.tabelasimbolos.ELSE){
 				CasaToken(this.tabelasimbolos.ELSE);
 				C();
@@ -191,6 +249,7 @@ public class AnalisadorSintatico{
 
 
 		}else if(this.simbolo.token == this.tabelasimbolos.READLN){
+<<<<<<< HEAD
 			CasaToken(this.tabelasimbolos.READLN);
 			CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
 			CasaToken(this.tabelasimbolos.identificador);
@@ -345,5 +404,15 @@ public class AnalisadorSintatico{
 
 
 
+=======
+
+		}else if(this.simbolo.token == this.tabelasimbolos.WRITE){
+
+		}else if(this.simbolo.token == this.tabelasimbolos.PONTO_VIRGULA){
+
+		}
+	}
+
+>>>>>>> 9c1a3efa2fd420661dcb926511350429a6be15de
 
 }

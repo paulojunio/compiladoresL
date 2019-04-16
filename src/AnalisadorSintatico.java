@@ -54,7 +54,7 @@ public class AnalisadorSintatico{
 			  this.simbolo.token == this.tabelasimbolos.WRITE ||
 			  this.simbolo.token == this.tabelasimbolos.WRITELN ||
 			  this.simbolo.token == this.tabelasimbolos.PONTO_VIRGULA){
-				System.out.println("OII");
+				//System.out.println("OII");
 				B();
 			}
 		}
@@ -122,7 +122,7 @@ public class AnalisadorSintatico{
 			}
 		}
 		CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
-		System.out.println("AQUI");
+		//System.out.println("AQUI");
 	}
 
 	/*
@@ -195,7 +195,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
 
 		}else if(this.simbolo.token == this.tabelasimbolos.WRITE){
-			System.out.println("Entrou aquiiiii!!! NAOOO");
+			//System.out.println("Entrou aquiiiii!!! NAOOO");
 			CasaToken(this.tabelasimbolos.WRITE);
 			CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
 			Exp();
@@ -207,7 +207,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
 
 		}else if(this.simbolo.token == this.tabelasimbolos.WRITELN){
-			System.out.println("Entrou aquiiiii!!!");
+			//System.out.println("Entrou aquiiiii!!!");
 			CasaToken(this.tabelasimbolos.WRITELN);
 			CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
 			Exp();

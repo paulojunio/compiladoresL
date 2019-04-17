@@ -1,3 +1,13 @@
+/**
+* Trabalho de compiladores - criacao da linguagem L
+* Professor: Alexei Machado
+* 
+* @author Giovanna Avila Riqueti
+* @author Paulo Junio Reis Rodrigues
+* @version 1
+* Data: 17/04/2019
+*/
+
 import java.io.*;
 //Classe que le um arquivo e pega digito por digito para formar o lexema
 public class AnalisadorLexico{
@@ -15,8 +25,12 @@ public class AnalisadorLexico{
     public boolean fimDeArquivo;
 
 
-
-
+    
+    /**
+     * Metodo construtor analisador lexico
+     * @param bufferedReader arquivo que sera lido
+     * @param tabelaSimbolos tabela de simbolos
+     */
     public AnalisadorLexico(BufferedReader bufferedReader, TabelaSimbolos tabelaSimbolos){
         this.codigo = bufferedReader;
         this.tabelaSimbolos = tabelaSimbolos;
@@ -49,6 +63,10 @@ public class AnalisadorLexico{
         }
     } */
 
+    /**
+     * Metodo da maquina de estados do analisador lexico
+     * @return Simbolo retorna o simbolo criado
+     */
     public Simbolo maquinaDeEstados() {
         int estadoInicial = 0;
         int estado = estadoInicial;
@@ -121,7 +139,10 @@ public class AnalisadorLexico{
             return null;
         }
     }
-
+    /**
+     * Metodo para analisar o estado 0 da maquina de estados
+     * @return int o proximo estado
+     */
     public int estado0(){
         lexema = "";
         char caracter = lerCaracter();
@@ -166,7 +187,10 @@ public class AnalisadorLexico{
         mostrarErro(caracter);
         return 16;
     }
-
+    /**
+     * Metodo para analisar o estado 1 da maquina de estados
+     * @return int o proximo estado
+     */
     public int estado1() {
         char caracter = lerCaracter();
         if(Controle.asterisco == caracter) {
@@ -178,7 +202,10 @@ public class AnalisadorLexico{
         mostrarErro(caracter);
         return 16;
     }
-
+    /**
+     * Metodo para analisar o estado 2 da maquina de estados
+     * @return int o proximo estado
+     */
     public int estado2() {
         char caracter = lerCaracter();
         if(Controle.asterisco == caracter) {
@@ -189,7 +216,10 @@ public class AnalisadorLexico{
         mostrarErro(caracter);
         return 16;
     }
-
+    /**
+     * Metodo para analisar o estado 3 da maquina de estados
+     * @return int o proximo estado
+     */
     public int estado3() {
         char caracter = lerCaracter();
         if(Controle.asterisco == caracter){
@@ -202,7 +232,10 @@ public class AnalisadorLexico{
         mostrarErro(caracter);
         return 16;
     }
-    
+    /**
+     * Metodo para analisar o estado 4 da maquina de estados
+     * @return int o proximo estado
+     */
     public int estado4() {
         char caracter = lerCaracter();
         if(Controle.EDigito(caracter) == true) {
@@ -215,7 +248,10 @@ public class AnalisadorLexico{
         mostrarErro(caracter);
         return 16;
     }
-
+    /**
+     * Metodo para analisar o estado 5 da maquina de estados
+     * @return int o proximo estado
+     */
     public int estado5() {
         char caracter = lerCaracter();
         if(Controle.EDigito(caracter) || Controle.ELetra(caracter) || Controle.ECaracterEspecial(caracter)) {
@@ -225,7 +261,10 @@ public class AnalisadorLexico{
         mostrarErro(caracter);
         return 16;
     }
-
+    /**
+     * Metodo para analisar o estado 6 da maquina de estados
+     * @return int o proximo estado
+     */
     public int estado6() {
         char caracter = lerCaracter();
         if(Controle.apostofro == caracter) {
@@ -235,7 +274,10 @@ public class AnalisadorLexico{
         mostrarErro(caracter);
         return 16;
     }
-
+    /**
+     * Metodo para analisar o estado 7 da maquina de estados
+     * @return int o proximo estado
+     */
     public int estado7() {
         char caracter = lerCaracter();
         if(caracter == 'x' || caracter == 'X') {
@@ -251,7 +293,10 @@ public class AnalisadorLexico{
         mostrarErro(caracter);
         return 16;
     }
-    
+    /**
+     * Metodo para analisar o estado 8 da maquina de estados
+     * @return int o proximo estado
+     */
     public int estado8() {
         char caracter = lerCaracter();
         if(Controle.EDigito(caracter) || Controle.EHexadecimal(caracter)) {
@@ -261,7 +306,10 @@ public class AnalisadorLexico{
         mostrarErro(caracter);
         return 16;
     }
-
+    /**
+     * Metodo para analisar o estado 9 da maquina de estados
+     * @return int o proximo estado
+     */
     public int estado9() {
         char caracter = lerCaracter();
         if(Controle.EDigito(caracter) || Controle.EHexadecimal(caracter)) {
@@ -271,7 +319,10 @@ public class AnalisadorLexico{
         mostrarErro(caracter);
         return 16;
     }
-
+    /**
+     * Metodo para analisar o estado 10 da maquina de estados
+     * @return int o proximo estado
+     */
     public int estado10() {
         char caracter = lerCaracter();
         if(Controle.EDigito(caracter) || Controle.ELetra(caracter) || Controle.ECaracterEspecial(caracter) || caracter == Controle.espaco) {
@@ -283,7 +334,10 @@ public class AnalisadorLexico{
         mostrarErro(caracter);
         return 16;
     }
-
+    /**
+     * Metodo para analisar o estado 11 da maquina de estados
+     * @return int o proximo estado
+     */
     public int estado11() {
         char caracter = lerCaracter();
         if(Controle.aspas == caracter) {
@@ -298,7 +352,10 @@ public class AnalisadorLexico{
         mostrarErro(caracter);
         return 16;
     }
-    
+    /**
+     * Metodo para analisar o estado 12 da maquina de estados
+     * @return int o proximo estado
+     */
     public int estado12() {
         char caracter = lerCaracter();
         if(Controle.maior == caracter) {
@@ -314,7 +371,10 @@ public class AnalisadorLexico{
         mostrarErro(caracter);
         return 16;
     }
-    
+    /**
+     * Metodo para analisar o estado 13 da maquina de estados
+     * @return int o proximo estado
+     */
     public int estado13() {
         char caracter = lerCaracter();
         if(Controle.igual == caracter) {
@@ -327,7 +387,10 @@ public class AnalisadorLexico{
         mostrarErro(caracter);
         return 16;
     }
-
+    /**
+     * Metodo para analisar o estado 14 da maquina de estados
+     * @return int o proximo estado
+     */
     public int estado14() {
         char caracter = lerCaracter();
         if (Controle.sublinhado == caracter || Controle.pontoFinal == caracter) {
@@ -340,7 +403,10 @@ public class AnalisadorLexico{
         mostrarErro(caracter);
         return 16;
     }
-
+    /**
+     * Metodo para analisar o estado 15 da maquina de estados
+     * @return int o proximo estado
+     */
     public int estado15() {
         char caracter = lerCaracter();
         if(Controle.ELetra(caracter) == true || Controle.EDigito(caracter) == true || Controle.sublinhado == caracter || Controle.pontoFinal == caracter) {
@@ -354,6 +420,11 @@ public class AnalisadorLexico{
         mostrarErro(caracter);
         return 16;
     }
+
+    /**
+     * Metodo para ler uma caracter
+     * @return retorna a caracter lida
+     */
     public char lerCaracter() {
         try {
             if(devolve == true) {
@@ -369,12 +440,16 @@ public class AnalisadorLexico{
         return ultimaLetra;
     }
 
+    /**
+     * Metodo para mostrar erros durante a execucao do analisador lexico
+     * @param char caracter e' o caracter que gerou o erro
+     */
     public void mostrarErro(char caracter) {
         lexema += caracter;
         if(Controle.ECaracterValido(caracter) == true) {
             System.out.println(linha + ":" + "lexema nao identificado" + '[' + lexema + "].");
         }else{
-            System.out.println(linha + ":" + "caractere invalido." + " Qual caracter :" + lexema + " Digito: " + (int)lexema.charAt(0));
+            System.out.println(linha + ":" + "caractere invalido.");
         }
 
         if(Controle.fimDeArquivo == caracter) {

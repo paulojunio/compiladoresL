@@ -1,3 +1,13 @@
+/**
+* Trabalho de compiladores - criacao da linguagem L
+* Professor: Alexei Machado
+* 
+* @author Giovanna Avila Riqueti
+* @author Paulo Junio Reis Rodrigues
+* @version 1
+* Data: 17/04/2019
+*/
+
 import java.util.HashMap;
 
 //Criacao de tabela de simbolos
@@ -49,6 +59,9 @@ public class TabelaSimbolos{
 
     public final static byte constante = 37;
 
+    /**
+     * Metodo construtor da tabela de simbolos
+     */
     public TabelaSimbolos(){
         tabela.put("id", new Simbolo(identificador, "id"));
         tabela.put("var", new Simbolo(VAR, "var"));
@@ -94,10 +107,20 @@ public class TabelaSimbolos{
         tabela.put("const", new Simbolo(CONST, "const"));
     }
 
+    /**
+     * Metodo para buscar o lexema na tabela
+     * @param lexema String lexema
+     * @return Simbolo retorna o simbolo encontrado
+     */
     public Simbolo buscaLexema(String lexema) {
         return tabela.get(lexema.toLowerCase());
     }
 
+    /**
+     * Metodo para inserir um identificador na tabela
+     * @param lexema String lexema
+     * @return Simbolo simbolo adicionado
+     */
     public Simbolo inserirIdentificador(String lexema) {
         Simbolo simbolo = new Simbolo (identificador,lexema.toLowerCase());
         tabela.put(lexema.toLowerCase(),simbolo);
@@ -110,6 +133,9 @@ public class TabelaSimbolos{
         return simbolo;
     }*/
 
+    /**
+     * Metodo para printar a tabela
+     */
     public void printTabela(){
         int i = 0;
         for (String lexema : tabela.keySet()) {

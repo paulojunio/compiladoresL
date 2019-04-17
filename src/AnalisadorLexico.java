@@ -71,7 +71,6 @@ public class AnalisadorLexico{
         int estadoInicial = 0;
         int estado = estadoInicial;
         int estadoFinal = 16;
-        lexema = "";
         
         while(estado != estadoFinal) {
             if(estado == 0) {
@@ -120,7 +119,7 @@ public class AnalisadorLexico{
             if(tabelaSimbolos.buscaLexema(lexema) == null) {
                 if(lexema.charAt(0) == '"' || lexema.charAt(0) == '\'' || Controle.EDigito(lexema.charAt(0))) {
                     //System.out.println(lexema + " Achou uma constante.");
-                    Simbolo simboloConst = new Simbolo((byte)37,lexema,tipoConst);
+                    Simbolo simboloConst = new Simbolo(tabelaSimbolos.constante,lexema,tipoConst);
                     System.out.println("Lexema(CONST) : " + lexema + " Tipo : " + tipoConst + " Tamanho = 0");
                     return simboloConst;
                 }else {
@@ -167,7 +166,7 @@ public class AnalisadorLexico{
         }else if(Controle.EDigito(caracter) == true) {
             lexema += caracter;
             if(caracter == '0') {
-                tipoConst = "Character";
+                //tipoConst = "Character";
                 return 7;
             }
             tipoConst = "Integer";
@@ -194,10 +193,11 @@ public class AnalisadorLexico{
     public int estado1() {
         char caracter = lerCaracter();
         if(Controle.asterisco == caracter) {
+            //lexema += caracter;
             return 2;
         }else if(Controle.ECaracterValido(caracter) == true) {
             devolve = true;
-            return 13;
+            return 16;
         }
         mostrarErro(caracter);
         return 16;
@@ -209,8 +209,10 @@ public class AnalisadorLexico{
     public int estado2() {
         char caracter = lerCaracter();
         if(Controle.asterisco == caracter) {
+            //lexema += caracter;
             return 3;
         }else if(Controle.ECaracterValido(caracter) == true) {
+            //lexema += caracter;
             return 2;
         }
         mostrarErro(caracter);
@@ -223,10 +225,13 @@ public class AnalisadorLexico{
     public int estado3() {
         char caracter = lerCaracter();
         if(Controle.asterisco == caracter){
+            //lexema += caracter;
             return 3;
         }else if(Controle.barra == caracter) {
+            //lexema += caracter;
             return 0;
         }else if(Controle.ECaracterValido(caracter) == true) {
+            //lexema += caracter;
             return 2;
         }
         mostrarErro(caracter);
@@ -281,12 +286,15 @@ public class AnalisadorLexico{
     public int estado7() {
         char caracter = lerCaracter();
         if(caracter == 'x' || caracter == 'X') {
+            tipoConst = "Character";
             lexema += caracter;
             return 8;
         }else if(Controle.EDigito(caracter) == true) {
+            tipoConst = "Integer";
             lexema += caracter;
             return 4;
         }else if(Controle.ECaracterValido(caracter)) {
+            tipoConst = "Integer";
             devolve = true;
             return 16;
         }
@@ -413,7 +421,6 @@ public class AnalisadorLexico{
             lexema += caracter;
             return 15;
         }else if(Controle.ECaracterValido(caracter) == true) {
-            
             devolve = true;
             return 16;
         }

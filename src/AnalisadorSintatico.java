@@ -38,10 +38,10 @@ public class AnalisadorSintatico{
 			this.simbolo = analisadorlexico.maquinaDeEstados();
 		}else{
 			if(analisadorlexico.fimDeArquivo){
-				System.out.println(analisadorlexico.linha + " : fim de arquivo não esperado");
+				System.out.println(analisadorlexico.linha + " : fim de arquivo nao esperado");
 				System.exit(0);
 			}else{
-				System.out.println(analisadorlexico.linha + " : token não esperado [ " + this.simbolo.lexema + " ] ");
+				System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ] ");
 				System.exit(0);
 			}
 		}
@@ -86,7 +86,7 @@ public class AnalisadorSintatico{
 			this.simbolo.token == this.tabelasimbolos.WRITELN ||
 			this.simbolo.token == this.tabelasimbolos.PONTO_VIRGULA)){
 			
-			System.out.println(analisadorlexico.linha + " : token não esperado [ " + this.simbolo.lexema + " ] ");
+			System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ] ");
 			System.exit(0);
 		}
 	}
@@ -116,7 +116,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
 		}else{
 			//Caso nenhum token seja os que o D espera
-			System.out.println(analisadorlexico.linha + " : token não esperado [ " + this.simbolo.lexema + " ] ");
+			System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ] ");
 			System.exit(0);
 		}
 	}
@@ -129,12 +129,12 @@ public class AnalisadorSintatico{
 		//(char | id)
 		if (this.simbolo.token == this.tabelasimbolos.INTEGER){
 			CasaToken(this.tabelasimbolos.INTEGER);
-			System.out.println(" " + this.simbolo.token);
+			//System.out.println(" " + this.simbolo.token);
 
 		}else if(this.simbolo.token == this.tabelasimbolos.CHAR){
 			CasaToken(this.tabelasimbolos.CHAR);
 		}
-		System.out.println(" " + this.simbolo.lexema);
+		//System.out.println(" " + this.simbolo.lexema);
 		CasaToken(this.tabelasimbolos.identificador);
 
 		if (this.simbolo.token == this.tabelasimbolos.IGUAL || this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
@@ -170,7 +170,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
 		}else{
 			//Caso nenhum token seja os que o E espera
-			System.out.println(analisadorlexico.linha + " : token não esperado [ " + this.simbolo.lexema + " ] ");
+			System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ] ");
 			System.exit(0);
 		}
 	}
@@ -254,7 +254,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
 		}else{
 			//Caso nenhum token seja os que o B espera
-			System.out.println(analisadorlexico.linha + " : token não esperado [ " + this.simbolo.lexema + " ] ");
+			System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ] ");
 			System.exit(0);
 		}
 	}
@@ -283,7 +283,7 @@ public class AnalisadorSintatico{
 
 	/**
 	* Metodo correspondente ao simboolo nao-terminal da gramatica Exp
-	* EXP -> EXPS [ ( ‘=’ | “<>” | ‘<’ | ‘>’ | “<=” | “>=” ) EXPS ]
+	* EXP -> EXPS [ ( '=' | "<>" | '<' | '>' | "<=" | ">=" ) EXPS ]
 	*/
 	public void Exp(){
 		ExpS();
@@ -311,7 +311,7 @@ public class AnalisadorSintatico{
 
 	/**
 	* Metodo correspondente ao simboolo nao-terminal da gramatica ExpS
-	* EXPS -> [ ‘+’ | ‘-’ ] G { ( ‘+’ | ‘-’ | or ) G }*
+	* EXPS -> [ '+' | '-' ] G { ( '+' | '-' | or ) G }*
 	*/
 	public void ExpS(){
 		if(this.simbolo.token == this.tabelasimbolos.MAIS){
@@ -339,7 +339,7 @@ public class AnalisadorSintatico{
 
 	/**
 	* Metodo correspondente ao simboolo nao-terminal da gramatica G
-	* G -> F { ( ‘’ | ‘/’ | ‘%’ | and } F )
+	* G -> F { ( '*' | '/' | '%' | and } F )
 	*/
 	public void G(){
 		F();
@@ -367,7 +367,7 @@ public class AnalisadorSintatico{
 
 	/**
 	* Metodo correspondente ao simboolo nao-terminal da gramatica F
-	* F -> not F | ‘(‘ EXP ‘)’ | constante | id [ ‘[‘ EXP ‘]’ ]
+	* F -> not F | '(' EXP ')' | constante | id [ '[' EXP ']' ]
 	*/
 	public void F(){
 		if(this.simbolo.token == this.tabelasimbolos.NOT){
@@ -388,7 +388,7 @@ public class AnalisadorSintatico{
 			}
 		}else{
 			//Caso nenhum token seja os que o F espera
-			System.out.println(analisadorlexico.linha + " : token não esperado [ " + this.simbolo.lexema + " ] ");
+			System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ] ");
 			System.exit(0);
 		}
 	}

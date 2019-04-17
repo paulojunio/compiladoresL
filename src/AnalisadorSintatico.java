@@ -1,15 +1,27 @@
-import java.awt.Robot;
+/**
+* Trabalho de compiladores - criacao da linguagem L
+* Professor: Alexei Machado
+* 
+* @author Giovanna Avila Riqueti
+* @author Paulo Junio Reis Rodrigues
+* @version 1
+* Data: 17/04/2019
+*/
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-
+//Classe que executa o analisador sintatico
 public class AnalisadorSintatico{
 	AnalisadorLexico analisadorlexico;
 	TabelaSimbolos tabelasimbolos;
 	Simbolo simbolo;
 	BufferedReader file;
 
-
+	/**
+	* Construtor da classe
+	* @param BufferedReader file - arquivo a ser lido
+	*/
 	public AnalisadorSintatico(BufferedReader file){
 		this.file = file;
 		this.tabelasimbolos = new TabelaSimbolos();
@@ -17,6 +29,10 @@ public class AnalisadorSintatico{
 		this.simbolo = analisadorlexico.maquinaDeEstados();
 	}
 
+	/**
+	* Metodo para identificar se o simbolo e' igual ao token esperado, se for, o proximo simbolo e' lido, se nao uma mensagem de erro e' chamada
+	* @param byte tokenesperado - o token que se espera
+	*/
 	public void CasaToken(byte tokenesperado){
 		if(this.simbolo.token == tokenesperado){
 			this.simbolo = analisadorlexico.maquinaDeEstados();
@@ -31,11 +47,14 @@ public class AnalisadorSintatico{
 		}
 	}
 
+
+	/**
+	* Metodo correspondente ao simboolo nao-terminal da gramatica S
+	* S -> { D }+ { B }+
+	*/
 	public void S(){
-		System.out.println("Comecou denovo");
 		if (this.simbolo.token == this.tabelasimbolos.VAR || this.simbolo.token == this.tabelasimbolos.CONST){
 			while(this.simbolo.token == this.tabelasimbolos.VAR || this.simbolo.token == this.tabelasimbolos.CONST){
-				System.out.println("Entrou");
 				D();
 			}
 		}
@@ -54,10 +73,10 @@ public class AnalisadorSintatico{
 			  this.simbolo.token == this.tabelasimbolos.WRITE ||
 			  this.simbolo.token == this.tabelasimbolos.WRITELN ||
 			  this.simbolo.token == this.tabelasimbolos.PONTO_VIRGULA){
-				//System.out.println("OII");
 				B();
 			}
 		}
+		//Depois que comeca o B, nao pode voltar no D, essa condicao avisa doerro caso isso ocorra
 		if ((this.simbolo.token == this.tabelasimbolos.VAR || this.simbolo.token == this.tabelasimbolos.CONST) || 
 			!(this.simbolo.token == this.tabelasimbolos.identificador || 
 			this.simbolo.token == this.tabelasimbolos.FOR || 
@@ -72,6 +91,11 @@ public class AnalisadorSintatico{
 		}
 	}
 
+
+	/**
+	* Metodo correspondente ao simboolo nao-terminal da gramatica D
+	* D -> Var { T }* | Const id ‘=’ [ ‘-’ ] constante ‘;’
+	*/
 	public void D(){
 		if (this.simbolo.token == this.tabelasimbolos.VAR){
 			CasaToken(this.tabelasimbolos.VAR);
@@ -91,13 +115,15 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.constante);
 			CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
 		}else{
+			//Caso nenhum token seja os que o D espera
 			System.out.println(analisadorlexico.linha + " : token não esperado [ " + this.simbolo.lexema + " ] ");
 			System.exit(0);
 		}
 	}
 
-	/*
-	T -> (integer|char) id [E] {,id[E]}*;
+	/**
+	* Metodo correspondente ao simboolo nao-terminal da gramatica T
+	* T -> (integer|char) id [E] {,id[E]}*;
 	*/
 	public void T(){
 		//(char | id)
@@ -122,11 +148,11 @@ public class AnalisadorSintatico{
 			}
 		}
 		CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
-		//System.out.println("AQUI");
 	}
 
-	/*
-	E -> = [-] const | "[" const "]"
+	/**
+	* Metodo correspondente ao simboolo nao-terminal da gramatica E
+	* E -> = [-] const | "[" const "]"
 	*/
 	public void E(){
 
@@ -143,13 +169,21 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.constante);
 			CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
 		}else{
+			//Caso nenhum token seja os que o E espera
 			System.out.println(analisadorlexico.linha + " : token não esperado [ " + this.simbolo.lexema + " ] ");
 			System.exit(0);
 		}
 	}
 
+
+	/**
+	* Metodo correspondente ao simboolo nao-terminal da gramatica B
+	* B -> id [ ‘[‘ EXP ‘]’ ] ‘=’ Exp ‘;’ | 
+			For id ‘=’ EXP to EXP [ step constante ] C |
+			if EXP then C [ else C ] | ‘;’ | 
+			readln ‘(‘ id ‘)’ ‘;’ | write[ ln ] ‘(‘ EXP { ‘,’ EXP }* ‘)’ ‘;’ 
+	*/
 	public void B(){
-		//System.out.println("AHAHAHA");
 		if(this.simbolo.token == this.tabelasimbolos.identificador){
 			CasaToken(this.tabelasimbolos.identificador);
 			if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
@@ -195,7 +229,6 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
 
 		}else if(this.simbolo.token == this.tabelasimbolos.WRITE){
-			//System.out.println("Entrou aquiiiii!!! NAOOO");
 			CasaToken(this.tabelasimbolos.WRITE);
 			CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
 			Exp();
@@ -207,7 +240,6 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
 
 		}else if(this.simbolo.token == this.tabelasimbolos.WRITELN){
-			//System.out.println("Entrou aquiiiii!!!");
 			CasaToken(this.tabelasimbolos.WRITELN);
 			CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
 			Exp();
@@ -221,12 +253,16 @@ public class AnalisadorSintatico{
 		}else if(this.simbolo.token == this.tabelasimbolos.PONTO_VIRGULA){
 			CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
 		}else{
+			//Caso nenhum token seja os que o B espera
 			System.out.println(analisadorlexico.linha + " : token não esperado [ " + this.simbolo.lexema + " ] ");
 			System.exit(0);
 		}
 	}
 
-
+	/**
+	* Metodo correspondente ao simboolo nao-terminal da gramatica C
+	* C -> B | ‘{‘ { B }* ‘}’
+	*/
 	public void C(){
 		if(this.simbolo.token == this.tabelasimbolos.CHAVES_ABERTO){
 			CasaToken(this.tabelasimbolos.CHAVES_ABERTO);
@@ -244,6 +280,11 @@ public class AnalisadorSintatico{
 		}
 	}
 
+
+	/**
+	* Metodo correspondente ao simboolo nao-terminal da gramatica Exp
+	* EXP -> EXPS [ ( ‘=’ | “<>” | ‘<’ | ‘>’ | “<=” | “>=” ) EXPS ]
+	*/
 	public void Exp(){
 		ExpS();
 		if(this.simbolo.token == this.tabelasimbolos.IGUAL){
@@ -268,6 +309,10 @@ public class AnalisadorSintatico{
 	}
 
 
+	/**
+	* Metodo correspondente ao simboolo nao-terminal da gramatica ExpS
+	* EXPS -> [ ‘+’ | ‘-’ ] G { ( ‘+’ | ‘-’ | or ) G }*
+	*/
 	public void ExpS(){
 		if(this.simbolo.token == this.tabelasimbolos.MAIS){
 			CasaToken(this.tabelasimbolos.MAIS);
@@ -292,7 +337,10 @@ public class AnalisadorSintatico{
 		}
 	}
 
-
+	/**
+	* Metodo correspondente ao simboolo nao-terminal da gramatica G
+	* G -> F { ( ‘’ | ‘/’ | ‘%’ | and } F )
+	*/
 	public void G(){
 		F();
 		while(this.simbolo.token == this.tabelasimbolos.MULTIPLICACAO ||
@@ -316,6 +364,11 @@ public class AnalisadorSintatico{
 		}
 	}
 
+
+	/**
+	* Metodo correspondente ao simboolo nao-terminal da gramatica F
+	* F -> not F | ‘(‘ EXP ‘)’ | constante | id [ ‘[‘ EXP ‘]’ ]
+	*/
 	public void F(){
 		if(this.simbolo.token == this.tabelasimbolos.NOT){
 			CasaToken(this.tabelasimbolos.NOT);
@@ -334,12 +387,11 @@ public class AnalisadorSintatico{
 				CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
 			}
 		}else{
+			//Caso nenhum token seja os que o F espera
 			System.out.println(analisadorlexico.linha + " : token não esperado [ " + this.simbolo.lexema + " ] ");
 			System.exit(0);
 		}
 	}
-
-
 
 
 }

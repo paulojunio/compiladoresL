@@ -129,7 +129,7 @@ public class AnalisadorLexico{
                 return tabelaSimbolos.buscaLexema(lexema);
             }
         }else{
-            System.out.println("Fim de arquivo : " + linha);
+            //System.out.println("Fim de arquivo : " + linha);
             //System.exit(0);
             Simbolo simbolofim = new Simbolo((byte)38,lexema);
             return simbolofim;

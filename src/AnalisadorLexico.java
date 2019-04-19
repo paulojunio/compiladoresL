@@ -130,8 +130,9 @@ public class AnalisadorLexico{
             }
         }else{
             System.out.println("Fim de arquivo : " + linha);
-            System.exit(0);
-            return null;
+            //System.exit(0);
+            Simbolo simbolofim = new Simbolo((byte)38,lexema);
+            return simbolofim;
         }
     }
     /**

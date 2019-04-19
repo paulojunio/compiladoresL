@@ -5,7 +5,7 @@ public class teste2{
         try{
             System.setProperty("file.encoding", "UTF-8");
             TabelaSimbolos tabelaSimbolos = new TabelaSimbolos();
-            BufferedReader code = new BufferedReader(new FileReader("exemplo1.l"));
+            BufferedReader code = new BufferedReader(new FileReader("exemplo22.l"));
             AnalisadorLexico a = new AnalisadorLexico(code,tabelaSimbolos);
             AnalisadorSintatico b = new AnalisadorSintatico(code);
             b.S();

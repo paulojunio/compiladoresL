@@ -109,10 +109,6 @@ public class AnalisadorLexico{
                 //final
             }
         }
-
-        if(errorCompilacao) {
-            System.exit(0); //Erro, parar programa.
-        }
         
 
         if(fimDeArquivo == false) {
@@ -456,12 +452,18 @@ public class AnalisadorLexico{
         if(Controle.ECaracterValido(caracter) == true) {
             System.out.println(linha + ":" + "lexema nao identificado" + '[' + lexema + "].");
         }else{
-            System.out.println(linha + ":" + "caractere invalido.");
+            if(Controle.fimDeArquivo == caracter) {
+                System.out.println(linha + ":" + "fim de arquivo nao esperado.");
+            }else {
+                System.out.println(linha + ":" + "caractere invalido.");
+            }
+            
         }
 
-        if(Controle.fimDeArquivo == caracter) {
-            System.out.println(linha + ":" + "fim de arquivo nao esperado.");
-        }
+        
         errorCompilacao = true;
+        
+        System.exit(0); //Erro, parar programa.
+        
     }
 }

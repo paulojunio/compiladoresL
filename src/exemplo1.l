@@ -6,7 +6,5 @@ Const MAXITER=10;
 /* Programa Principal */
 
   write("Digite seu nome: ");
-  readln(nome);
-  For n=b to MAXITER do{
-    writeln("Ola' ",nome);
-  }
+  write
+  

@@ -6,5 +6,4 @@ Const MAXITER=10;
 /* Programa Principal */
 
   write("Digite seu nome: ");
-  write
-  
+  if n1 < n2 then  else

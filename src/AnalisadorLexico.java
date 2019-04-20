@@ -116,16 +116,16 @@ public class AnalisadorLexico{
                 if(lexema.charAt(0) == '"' || lexema.charAt(0) == '\'' || Controle.EDigito(lexema.charAt(0))) {
                     //System.out.println(lexema + " Achou uma constante.");
                     Simbolo simboloConst = new Simbolo(tabelaSimbolos.constante,lexema,tipoConst);
-                    System.out.println("Lexema(CONST) : " + lexema + " Tipo : " + tipoConst + " Tamanho = 0");
+                    //System.out.println("Lexema(CONST) : " + lexema + " Tipo : " + tipoConst + " Tamanho = 0");
                     return simboloConst;
                 }else {
                     //System.out.println(lexema + " Achou um indetificador.");
                     Simbolo simboloIdent = tabelaSimbolos.inserirIdentificador(lexema);
-                    System.out.println("Lexema(ID) : " + lexema);
+                    //System.out.println("Lexema(ID) : " + lexema);
                     return simboloIdent;
                 }
             }else{
-                System.out.println("Lexema(PR) : " + lexema);
+                //System.out.println("Lexema(PR) : " + lexema);
                 return tabelaSimbolos.buscaLexema(lexema);
             }
         }else{
@@ -460,10 +460,8 @@ public class AnalisadorLexico{
             }
             
         }
-
         
         errorCompilacao = true;
-        
         System.exit(0); //Erro, parar programa.
         
     }

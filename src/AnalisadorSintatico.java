@@ -41,7 +41,7 @@ public class AnalisadorSintatico{
 				System.out.println(analisadorlexico.linha + " : fim de arquivo nao esperado");
 				System.exit(0);
 			}else{
-				System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ] ");
+				System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ]");
 				System.exit(0);
 			}
 		}
@@ -77,7 +77,7 @@ public class AnalisadorSintatico{
 			}
 		}
 		//Depois que comeca o B, nao pode voltar no D, essa condicao avisa doerro caso isso ocorra
-		if ((this.simbolo.token == this.tabelasimbolos.VAR || this.simbolo.token == this.tabelasimbolos.CONST) || 
+		/*if ((this.simbolo.token == this.tabelasimbolos.VAR || this.simbolo.token == this.tabelasimbolos.CONST) || 
 			!(this.simbolo.token == this.tabelasimbolos.identificador || 
 			this.simbolo.token == this.tabelasimbolos.FOR || 
 		    this.simbolo.token == this.tabelasimbolos.IF || 
@@ -86,8 +86,13 @@ public class AnalisadorSintatico{
 			this.simbolo.token == this.tabelasimbolos.WRITELN ||
 			this.simbolo.token == this.tabelasimbolos.PONTO_VIRGULA)){
 			
-			System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ] ");
+			System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ]");
 			System.exit(0);
+		}*/
+		if(analisadorlexico.fimDeArquivo == false) {
+				System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ]");
+		}else {
+				System.out.println("Fim de arquivo");
 		}
 	}
 
@@ -116,7 +121,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
 		}else{
 			//Caso nenhum token seja os que o D espera
-			System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ] ");
+			System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ]");
 			System.exit(0);
 		}
 	}
@@ -170,7 +175,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
 		}else{
 			//Caso nenhum token seja os que o E espera
-			System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ] ");
+			System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ]");
 			System.exit(0);
 		}
 	}
@@ -254,7 +259,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
 		}else{
 			//Caso nenhum token seja os que o B espera
-			System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ] ");
+			System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ]");
 			System.exit(0);
 		}
 	}
@@ -388,7 +393,7 @@ public class AnalisadorSintatico{
 			}
 		}else{
 			//Caso nenhum token seja os que o F espera
-			System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ] ");
+			System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ]");
 			System.exit(0);
 		}
 	}

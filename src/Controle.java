@@ -112,7 +112,8 @@ public class Controle{
      * @return boolean caracter e' um caracter valido
      */
     public static boolean ECaracterValido(char c) {
-        return ( ELetra(c) || EDigito(c) || ECaracterEspecial(c) || quebraDeLinhas(c));
+        //return ( ELetra(c) || EDigito(c) || ECaracterEspecial(c) || quebraDeLinhas(c) || c == fimDeArquivo); //Resolver problemas lexicos
+        return ( ELetra(c) || EDigito(c) || ECaracterEspecial(c) || quebraDeLinhas(c) );
     }
 
 }

@@ -91,9 +91,9 @@ public class AnalisadorSintatico{
 		}*/
 		if(analisadorlexico.fimDeArquivo == false) {
 				System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ]");
-		}else {
-				System.out.println("Fim de arquivo");
-		}
+		}//else {
+				//System.out.println("Fim de arquivo");
+		//}
 	}
 
 

@@ -9,7 +9,6 @@
 */
 
 import java.io.*;
-//teste do analisador lexico
 public class LC{
     public static void main(String[]args){
         try{

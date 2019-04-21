@@ -1,3 +1,13 @@
+/**
+* Trabalho de compiladores - criacao da linguagem L
+* Professor: Alexei Machado
+* 
+* @author Giovanna Avila Riqueti
+* @author Paulo Junio Reis Rodrigues
+* @version 1
+* Data: 17/04/2019
+*/
+
 //Classe referente ao simbolo
 public class Simbolo{
 

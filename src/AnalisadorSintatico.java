@@ -50,7 +50,7 @@ public class AnalisadorSintatico{
 
 	/**
 	* Metodo correspondente ao simboolo nao-terminal da gramatica S
-	* S -> { D }+ { B }+
+	* S -> { D }* { B }*
 	*/
 	public void S(){
 		if (this.simbolo.token == this.tabelasimbolos.VAR || this.simbolo.token == this.tabelasimbolos.CONST){
@@ -99,14 +99,14 @@ public class AnalisadorSintatico{
 
 	/**
 	* Metodo correspondente ao simboolo nao-terminal da gramatica D
-	* D -> Var { T }* | Const id ‘=’ [ ‘-’ ] constante ‘;’
+	* D -> Var { T }+ | Const id ‘=’ [ ‘-’ ] constante ‘;’
 	*/
 	public void D(){
 		if (this.simbolo.token == this.tabelasimbolos.VAR){
 			CasaToken(this.tabelasimbolos.VAR);
-			while(this.simbolo.token == this.tabelasimbolos.INTEGER || this.simbolo.token == this.tabelasimbolos.CHAR){
+			do {
 				T();
-			}
+			}while(this.simbolo.token == this.tabelasimbolos.INTEGER || this.simbolo.token == this.tabelasimbolos.CHAR);
 
 		}else if(this.simbolo.token == this.tabelasimbolos.CONST){
 			CasaToken(this.tabelasimbolos.CONST);
@@ -194,9 +194,9 @@ public class AnalisadorSintatico{
 	/**
 	* Metodo correspondente ao simboolo nao-terminal da gramatica B
 	* B -> id [ ‘[‘ EXP ‘]’ ] ‘=’ Exp ‘;’ | 
-			For id ‘=’ EXP to EXP [ step constante ] C |
+			For id ‘=’ EXP to EXP [ step constante ] do C |
 			if EXP then C [ else C ] | ‘;’ | 
-			readln ‘(‘ id ‘)’ ‘;’ | write[ ln ] ‘(‘ EXP { ‘,’ EXP }* ‘)’ ‘;’ 
+			readln ‘(‘ id ‘)’ ‘;’ | write ‘(‘ EXP { ‘,’ EXP }* ‘)’ ‘;’ | writeln ‘(‘ EXP { ‘,’ EXP }* ‘)’ ‘;’
 	*/
 	public void B(){
 

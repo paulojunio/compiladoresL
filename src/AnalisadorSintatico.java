@@ -241,6 +241,11 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.READLN);
 			CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
 			CasaToken(this.tabelasimbolos.identificador);
+			//if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
+			//	CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
+			//	Exp();
+			//	CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
+			//}
 			CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
 			CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
 

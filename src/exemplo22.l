@@ -7,3 +7,4 @@ Const MAXITER=10;
 
   write("Digite seu nome: ");
   
+  

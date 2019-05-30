@@ -115,6 +115,7 @@ public class AnalisadorSintatico{
 			//System.out.println(simbolo.lexema + " Lexema do id 1.");
 			
 			acoesSemanticas.verificarID(simbolo,(byte)1);
+			Simbolo idDeclarado = simbolo;
 
 			CasaToken(this.tabelasimbolos.identificador);
 			
@@ -125,6 +126,9 @@ public class AnalisadorSintatico{
 			if (this.simbolo.token == this.tabelasimbolos.MENOS){
 				CasaToken(this.tabelasimbolos.MENOS);
 			}
+
+			acoesSemanticas.alocandoTiposEmIds(idDeclarado, this.simbolo.tipo);
+
 			CasaToken(this.tabelasimbolos.constante);
 			CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
 		}else{
@@ -145,31 +149,40 @@ public class AnalisadorSintatico{
 	*/
 	public void T(){
 		//(char | id)
+		byte tipoDoId = 0;
 		if (this.simbolo.token == this.tabelasimbolos.INTEGER){
+			
+			tipoDoId = 1;
 			CasaToken(this.tabelasimbolos.INTEGER);
 			//System.out.println(" " + this.simbolo.token);
 
 		}else if(this.simbolo.token == this.tabelasimbolos.CHAR){
+			
+			tipoDoId = 2;
 			CasaToken(this.tabelasimbolos.CHAR);
 		}
 		//System.out.println(" " + this.simbolo.lexema);
 		
 		acoesSemanticas.verificarID(simbolo,(byte)2);
+		Simbolo idDeclarado = simbolo;
+		acoesSemanticas.alocandoTiposEmIds(idDeclarado, tipoDoId);
 
 		CasaToken(this.tabelasimbolos.identificador);
-
+		
 
 		if (this.simbolo.token == this.tabelasimbolos.IGUAL || this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
-			E();
+			E(idDeclarado);
 		}
 		while(this.simbolo.token == this.tabelasimbolos.VIRGULA){
 			CasaToken(this.tabelasimbolos.VIRGULA);
 
 			acoesSemanticas.verificarID(simbolo,(byte)2);
+			idDeclarado = simbolo;
+			acoesSemanticas.alocandoTiposEmIds(idDeclarado, tipoDoId);
 
 			CasaToken(this.tabelasimbolos.identificador);
 			if (this.simbolo.token == this.tabelasimbolos.IGUAL || this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
-				E();
+				E(idDeclarado);
 			}
 		}
 		CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
@@ -179,7 +192,7 @@ public class AnalisadorSintatico{
 	* Metodo correspondente ao simboolo nao-terminal da gramatica E
 	* E -> = [-] const | "[" const "]"
 	*/
-	public void E(){
+	public void E(Simbolo idDeclarado){
 
 		if (this.simbolo.token == this.tabelasimbolos.IGUAL){
 			CasaToken(this.tabelasimbolos.IGUAL);
@@ -191,6 +204,9 @@ public class AnalisadorSintatico{
 			}
 		}else if (this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
 			CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);	
+
+			acoesSemanticas.verificarVetorTamanho(this.simbolo, idDeclarado.tipo);
+			//System.out.println("Teste " + this.simbolo.lexema + " tipoId: " + idDeclarado.tipo);
 			CasaToken(this.tabelasimbolos.constante);
 			CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
 		}else{
@@ -432,7 +448,7 @@ public class AnalisadorSintatico{
 		}else if(this.simbolo.token == this.tabelasimbolos.identificador){
 			
 			acoesSemanticas.verificarID(simbolo,(byte)0);
-			
+
 			CasaToken(this.tabelasimbolos.identificador);
 			if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
 				CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);

@@ -24,15 +24,32 @@ public class AcoesSemanticas{
 				System.out.println("identificador ja declarado " + '[' + simbolo.lexema + "].");
 			}else{
                 simbolo.classe = simbolo.Constante_classe;
-                System.out.println("Constante alocada: " + '[' + simbolo.lexema + "] " + " Tipo: " + simbolo.classe);
+                System.out.println("Constante alocada: " + '[' + simbolo.lexema + "] " + " Tipo classe: " + simbolo.classe);
 			}
         }else{
             if(simbolo.classe != simbolo.Nenhuma_classe) {
 				System.out.println("identificador ja declarado " + '[' + simbolo.lexema + "].");
 			}else{
                 simbolo.classe = simbolo.Variavel_classe;
-                System.out.println("Variavel alocada: " + '[' + simbolo.lexema + "] " + " Tipo: " + simbolo.classe);
+                System.out.println("Variavel alocada: " + '[' + simbolo.lexema + "] " + " Tipo classe: " + simbolo.classe);
 			}
         }
+    }
+
+    public void verificarVetorTamanho(Simbolo simbolo, byte tipoDoIdentificador) {
+        //System.out.println(Integer.parseInt(simbolo.lexema)*2 + " , " + tipoDoIdentificador);
+        if(tipoDoIdentificador == 1) {
+            if(Integer.parseInt(simbolo.lexema) * 2 > 4000 ) {
+                System.out.println("tamanho do vetor excede o maximo permitido.");
+            }
+        }else if(tipoDoIdentificador == 2) {
+            if(Integer.parseInt(simbolo.lexema)  > 4000 ) {
+                System.out.println("tamanho do vetor excede o maximo permitido.");
+            }
+        }
+    }
+
+    public void alocandoTiposEmIds(Simbolo idDeclarado, byte tipoDoId) {
+        idDeclarado.tipo = tipoDoId;
     }
 }

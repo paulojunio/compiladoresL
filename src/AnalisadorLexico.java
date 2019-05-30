@@ -18,7 +18,7 @@ public class AnalisadorLexico{
     public String lexema;
     public char ultimaLetra;
     public int linha;
-    public String tipoConst;
+    public byte tipoConst;
 
     public boolean errorCompilacao;
     public boolean devolve;
@@ -147,10 +147,10 @@ public class AnalisadorLexico{
             if(Controle.barra == caracter) {
                 return 1;      
             }else if(Controle.apostofro == caracter) {
-                tipoConst = "Character";
+                tipoConst = 2;
                 return 5;
             }else if(Controle.aspas == caracter) {
-                tipoConst = "String";
+                tipoConst = 5;
                 return 10;
             }else if(Controle.menor == caracter) {
                 return 12;
@@ -166,7 +166,7 @@ public class AnalisadorLexico{
                 //tipoConst = "Character";
                 return 7;
             }
-            tipoConst = "Integer";
+            tipoConst = 1;
             return 4;
         }else if(Controle.ELetra(caracter) == true ) {
             lexema += caracter;
@@ -283,15 +283,15 @@ public class AnalisadorLexico{
     public int estado7() {
         char caracter = lerCaracter();
         if(caracter == 'x' || caracter == 'X') {
-            tipoConst = "Character";
+            tipoConst = 2;
             lexema += caracter;
             return 8;
         }else if(Controle.EDigito(caracter) == true) {
-            tipoConst = "Integer";
+            tipoConst = 1;
             lexema += caracter;
             return 4;
         }else if(Controle.ECaracterValido(caracter)) {
-            tipoConst = "Integer";
+            tipoConst = 1;
             devolve = true;
             return 16;
         }

@@ -17,6 +17,7 @@ public class AnalisadorSintatico{
 	TabelaSimbolos tabelasimbolos;
 	Simbolo simbolo;
 	BufferedReader file;
+	AcoesSemanticas acoesSemanticas;
 
 	/**
 	* Construtor da classe
@@ -25,6 +26,7 @@ public class AnalisadorSintatico{
 	public AnalisadorSintatico(BufferedReader file){
 		this.file = file;
 		this.tabelasimbolos = new TabelaSimbolos();
+		this.acoesSemanticas = new AcoesSemanticas();
 		this.analisadorlexico = new AnalisadorLexico(this.file, this.tabelasimbolos);
 		this.simbolo = analisadorlexico.maquinaDeEstados();
 	}
@@ -112,12 +114,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.CONST);
 			//System.out.println(simbolo.lexema + " Lexema do id 1.");
 			
-			/*ACAO SEMANTICO*/
-			if(simbolo.classe != simbolo.Nenhuma_classe) {
-				//Erro de identificador ja declarado.
-			}else{
-				simbolo.classe = simbolo.Constante_classe;
-			}
+			acoesSemanticas.verificarID(simbolo,(byte)1);
 
 			CasaToken(this.tabelasimbolos.identificador);
 			
@@ -157,12 +154,7 @@ public class AnalisadorSintatico{
 		}
 		//System.out.println(" " + this.simbolo.lexema);
 		
-		/*ACAO SEMANTICA*/
-		if(simbolo.classe != simbolo.Nenhuma_classe) {
-			//Erro de identificador ja declarado.
-		}else{
-			simbolo.classe = simbolo.Variavel_classe;
-		}
+		acoesSemanticas.verificarID(simbolo,(byte)2);
 
 		CasaToken(this.tabelasimbolos.identificador);
 
@@ -173,12 +165,7 @@ public class AnalisadorSintatico{
 		while(this.simbolo.token == this.tabelasimbolos.VIRGULA){
 			CasaToken(this.tabelasimbolos.VIRGULA);
 
-			/*ACAO SEMANTICA*/
-			if(simbolo.classe != simbolo.Nenhuma_classe) {
-				//Erro de identificador ja declarado.
-			}else{
-				simbolo.classe = simbolo.Variavel_classe;
-			}
+			acoesSemanticas.verificarID(simbolo,(byte)2);
 
 			CasaToken(this.tabelasimbolos.identificador);
 			if (this.simbolo.token == this.tabelasimbolos.IGUAL || this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
@@ -229,10 +216,9 @@ public class AnalisadorSintatico{
 	public void B(){
 
 		if(this.simbolo.token == this.tabelasimbolos.identificador){
-			/*ACAO SEMANTICO*/
-			if(simbolo.classe == simbolo.Nenhuma_classe) {
-				//Erro de identificador nao declarado.
-			}
+			
+			acoesSemanticas.verificarID(simbolo,(byte)0);
+			
 			CasaToken(this.tabelasimbolos.identificador);
 			if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
 				CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
@@ -245,10 +231,9 @@ public class AnalisadorSintatico{
 
 		}else if(this.simbolo.token == this.tabelasimbolos.FOR){
 			CasaToken(this.tabelasimbolos.FOR);
-			/*ACAO SEMANTICO*/
-			if(simbolo.classe == simbolo.Nenhuma_classe) {
-				//Erro de identificador nao declarado.
-			}
+
+			acoesSemanticas.verificarID(simbolo,(byte)0);
+
 			CasaToken(this.tabelasimbolos.identificador);
 			CasaToken(this.tabelasimbolos.IGUAL);
 			Exp();
@@ -276,10 +261,9 @@ public class AnalisadorSintatico{
 		}else if(this.simbolo.token == this.tabelasimbolos.READLN){
 			CasaToken(this.tabelasimbolos.READLN);
 			CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
-			/*ACAO SEMANTICO*/
-			if(simbolo.classe == simbolo.Nenhuma_classe) {
-				//Erro de identificador nao declarado.
-			}
+			
+			acoesSemanticas.verificarID(simbolo,(byte)0);
+
 			CasaToken(this.tabelasimbolos.identificador);
 			//if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
 			//	CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
@@ -446,10 +430,9 @@ public class AnalisadorSintatico{
 		}else if(this.simbolo.token == this.tabelasimbolos.constante){
 			CasaToken(this.tabelasimbolos.constante);
 		}else if(this.simbolo.token == this.tabelasimbolos.identificador){
-			/*ACAO SEMANTICO*/
-			if(simbolo.classe == simbolo.Nenhuma_classe) {
-				//Erro de identificador nao declarado.
-			}
+			
+			acoesSemanticas.verificarID(simbolo,(byte)0);
+			
 			CasaToken(this.tabelasimbolos.identificador);
 			if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
 				CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);

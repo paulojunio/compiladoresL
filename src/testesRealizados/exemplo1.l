@@ -1,6 +1,8 @@
 /* Exemplo de Programa na linguagem L */
 
-Const a = 2;
+Var char a = 2, a, n;
+Const b = 3;
+Const A = 1;
 Const MAXITER=10;
 
 /* Programa Principal */

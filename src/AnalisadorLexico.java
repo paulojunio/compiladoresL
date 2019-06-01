@@ -19,6 +19,7 @@ public class AnalisadorLexico{
     public char ultimaLetra;
     public int linha;
     public byte tipoConst;
+    public int tamanho;
 
     public boolean errorCompilacao;
     public boolean devolve;
@@ -71,7 +72,7 @@ public class AnalisadorLexico{
         int estadoInicial = 0;
         int estado = estadoInicial;
         int estadoFinal = 16;
-        
+        tamanho = 0;
         while(estado != estadoFinal) {
             if(estado == 0) {
                 estado = estado0();
@@ -115,7 +116,8 @@ public class AnalisadorLexico{
             if(tabelaSimbolos.buscaLexema(lexema) == null) {
                 if(lexema.charAt(0) == '"' || lexema.charAt(0) == '\'' || Controle.EDigito(lexema.charAt(0))) {
                     //System.out.println(lexema + " Achou uma constante.");
-                    Simbolo simboloConst = new Simbolo(tabelaSimbolos.constante,lexema,tipoConst);
+                    Simbolo simboloConst = new Simbolo(tabelaSimbolos.constante,lexema,tipoConst,tamanho);
+                    tamanho = 0;
                     //System.out.println("Lexema(CONST) : " + lexema + " Tipo : " + tipoConst + " Tamanho = 0");
                     return simboloConst;
                 }else {
@@ -150,7 +152,7 @@ public class AnalisadorLexico{
                 tipoConst = 2;
                 return 5;
             }else if(Controle.aspas == caracter) {
-                tipoConst = 5;
+                tipoConst = 2;
                 return 10;
             }else if(Controle.menor == caracter) {
                 return 12;
@@ -332,6 +334,7 @@ public class AnalisadorLexico{
         char caracter = lerCaracter();
         if(Controle.EDigito(caracter) || Controle.ELetra(caracter) || Controle.ECaracterEspecial(caracter) || caracter == Controle.espaco) {
             if(Controle.aspas != caracter && Controle.barraN != caracter && Controle.novalinha != caracter) {
+                tamanho += 2;
                 lexema += caracter;
                 return 11;
             }
@@ -350,6 +353,7 @@ public class AnalisadorLexico{
             return 16;
         }else if(Controle.EDigito(caracter) || Controle.ELetra(caracter) || Controle.ECaracterEspecial(caracter) || caracter == Controle.espaco) {
             if(Controle.aspas != caracter && Controle.barraN != caracter && Controle.novalinha != caracter) {
+                tamanho+=1;
                 lexema += caracter;
                 return 11;
             }

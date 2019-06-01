@@ -116,6 +116,14 @@ public class TabelaSimbolos{
         return tabela.get(lexema.toLowerCase());
     }
 
+    public void printTabelaCerta() {
+        int i = 0;
+        for (String lexema : tabela.keySet()) {
+            if(tabela.get(lexema.toLowerCase()).token == 0 || tabela.get(lexema.toLowerCase()).token == 37) 
+            System.out.println("Token: " + tabela.get(lexema.toLowerCase()).token + " Lexema: " + tabela.get(lexema.toLowerCase()).lexema + " Tamanho: " + tabela.get(lexema.toLowerCase()).tamanho + " Tipo: " + tabela.get(lexema.toLowerCase()).tipo + " Classe: " + tabela.get(lexema.toLowerCase()).classe);
+            i++;
+        }
+    }
     /**
      * Metodo para inserir um identificador na tabela
      * @param lexema String lexema
@@ -126,13 +134,6 @@ public class TabelaSimbolos{
         tabela.put(lexema.toLowerCase(),simbolo);
         return simbolo;
     }
-
-    /*public Simbolo inserir_constante(String lexema) {
-        Simbolo simbolo = new Simbolo (constante,lexema);
-        tabela.put(lexema,simbolo);
-        return simbolo;
-    }*/
-
     /**
      * Metodo para printar a tabela
      */

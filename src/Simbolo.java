@@ -25,9 +25,8 @@ public class Simbolo{
     public static final byte Nenhum_tipo = 0; // Nenhuma tipo = 0
     public static final byte Inteiro_tipo = 1;// Tipo inteiro = 1
     public static final byte Caracter_tipo = 2;// Tipo caracter = 2
-    public static final byte Array_tipo = 3;// Tipo array = 3
-    public static final byte Logico_tipo = 4;// Tipo logico = 4
-    public static final byte String_tipo = 5;// Tipo String = 5
+    public static final byte Logico_tipo = 3;// Tipo logico = 3
+    
 
     public Simbolo(){
         
@@ -37,11 +36,11 @@ public class Simbolo{
         this.lexema = lexema;
     }
 
-    public Simbolo(byte token, String lexema, byte tipo) {
+    public Simbolo(byte token, String lexema, byte tipo,int tamanho) {
         this.token = token;
         this.lexema = lexema;
         this.tipo = tipo;
         this.classe = 0;
-        this.tamanho = -1;
+        this.tamanho = tamanho;
     }
 }

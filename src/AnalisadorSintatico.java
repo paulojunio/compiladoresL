@@ -345,6 +345,7 @@ public class AnalisadorSintatico{
 				CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
 				EXP = Exp();
 				System.out.println("Volto Exp1" + " Tipo: " + EXP.tipo + " Tamnho:" + EXP.tamanho + " lexema: " + EXP.lexema);
+				System.out.println("IdDeclarado" + idDeclarado.lexema);
 				/*Acao semantica 13*/
 				if(idDeclarado.tamanho == 0) {
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
@@ -361,7 +362,9 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.IGUAL);
 			EXP = Exp();
 			System.out.println("Volto Exp2" + " Tipo: " + EXP.tipo + " Tamnho:" + EXP.tamanho + " lexema: " + EXP.lexema);
+			
 			/*Acao semantica 14*/
+			System.out.println("Tamanho id" + idDeclarado.tipo);
 			if(flag == false) {
 				if(idDeclarado.tamanho != 0 && idDeclarado.tipo == simbolo.Inteiro_tipo) {
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
@@ -372,17 +375,17 @@ public class AnalisadorSintatico{
 				}else if(EXP.tipo != idDeclarado.tipo){
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
-				}else if((EXP.tipo == simbolo.Caracter_tipo && EXP.tamanho != 0) && (idDeclarado.tipo == simbolo.Caracter_tipo && idDeclarado.tamanho != 0) ) {
-						if(EXP.tamanho > idDeclarado.tamanho) {
-							System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
-							System.exit(0);
-						}
+				}else if((EXP.tipo == simbolo.Caracter_tipo && EXP.tamanho != 0) || (idDeclarado.tipo == simbolo.Caracter_tipo && idDeclarado.tamanho != 0) ) {
+					if(EXP.tamanho > idDeclarado.tamanho) {
+						System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+						System.exit(0);
+					}
 				}
 			}else{
 				if(EXP.tipo != idDeclarado.tipo ) {
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
-				}else if((idDeclarado.tipo == simbolo.Caracter_tipo && idDeclarado.tamanho == 0) && EXP.tamanho != 0) {
+				}else if((idDeclarado.tipo == simbolo.Caracter_tipo && idDeclarado.tamanho != 0) && EXP.tamanho != 0) {
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
 				}else if(idDeclarado.tipo == simbolo.Inteiro_tipo && EXP.tamanho != 0) {

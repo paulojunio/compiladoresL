@@ -687,6 +687,7 @@ public class AnalisadorSintatico{
 		//System.out.println("CHEGOU ATE AQUI");
 		System.out.println("Tipo final" +EXPS1.tipo);
 		if (passou){
+			System.out.println("Entrou?");
 			if((EXPS1.tipo == simbolo.Inteiro_tipo) && (EXPS1.tamanho != 0)){
 				//System.out.println("Tipo" + EXPS1.tipo);
 				//System.out.println("tamanho" + EXPS1.tamanho);
@@ -715,7 +716,7 @@ public class AnalisadorSintatico{
 			}
 		}
 		
-
+		System.out.println("Passo" + "Tipo" + EXP.tipo + ", " + EXP.tamanho);
 		return EXP;
 	}
 
@@ -960,11 +961,11 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
 		}else if(this.simbolo.token == this.tabelasimbolos.constante){
 
-			CasaToken(this.tabelasimbolos.constante);
-
 			/*Acao semantica 25*/
 			F.tipo = this.simbolo.tipo;
 			F.tamanho = this.simbolo.tamanho;
+			CasaToken(this.tabelasimbolos.constante);
+	
 			
 		}else if(this.simbolo.token == this.tabelasimbolos.identificador){
 			

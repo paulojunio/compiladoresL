@@ -576,6 +576,7 @@ public class AnalisadorSintatico{
 		EXP.tamanho = EXPS.tamanho;
 
 		String operador = "";
+		boolean passou = false;
 
 		//System.out.println("Verificando");
 		//System.out.println(this.simbolo.token);
@@ -597,7 +598,8 @@ public class AnalisadorSintatico{
 				System.out.println("IGUAL");
 				operador = "igual";
 			}
-			
+			passou = true;
+			EXPS1 = ExpS();
 		}else if(this.simbolo.token == this.tabelasimbolos.DIFERENTE){
 			CasaToken(this.tabelasimbolos.DIFERENTE);
 			//Simbolo TEMP = ExpS();
@@ -611,6 +613,8 @@ public class AnalisadorSintatico{
 			}else{
 				operador = "diferente";
 			}
+			passou = true;
+			EXPS1 = ExpS();
 		}else if(this.simbolo.token == this.tabelasimbolos.MAIOR){
 			//System.out.println("Entrou aqui");
 			CasaToken(this.tabelasimbolos.MAIOR);
@@ -629,6 +633,8 @@ public class AnalisadorSintatico{
 			}else{
 				operador = "maior";
 			}
+			passou = true;
+			EXPS1 = ExpS();
 		}else if(this.simbolo.token == this.tabelasimbolos.MENOR){
 			CasaToken(this.tabelasimbolos.MENOR);
 			//Simbolo TEMP = ExpS();
@@ -642,6 +648,8 @@ public class AnalisadorSintatico{
 			}else{
 				operador = "menor";
 			}
+			passou = true;
+			EXPS1 = ExpS();
 
 		}else if(this.simbolo.token == this.tabelasimbolos.MENOR_IGUAL){
 			CasaToken(this.tabelasimbolos.MENOR_IGUAL);
@@ -656,6 +664,8 @@ public class AnalisadorSintatico{
 			}else{
 				operador = "menorIgual";
 			}
+			passou = true;
+			EXPS1 = ExpS();
 
 		}else if(this.simbolo.token == this.tabelasimbolos.MAIOR_IGUAL){
 			CasaToken(this.tabelasimbolos.MAIOR_IGUAL);
@@ -670,36 +680,41 @@ public class AnalisadorSintatico{
 			}else{
 				operador = "maiorIgual";
 			}
+			passou = true;
+			EXPS1 = ExpS();
 		}
-		EXPS1 = ExpS();
+		//EXPS1 = ExpS();
 		//System.out.println("CHEGOU ATE AQUI");
-		//System.out.println("Tipo final" +EXPS1.tipo);
-		if((EXPS1.tipo == simbolo.Inteiro_tipo) && (EXPS1.tamanho != 0)){
-			//System.out.println("Tipo" + EXPS1.tipo);
-			//System.out.println("tamanho" + EXPS1.tamanho);
-			System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
-			System.exit(0);
-		}else if((EXPS1.tipo == simbolo.Logico_tipo) || (EXP.tipo == simbolo.Logico_tipo)){
-			System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
-			System.exit(0);
-		}else if( operador == "igual"){
-			//System.out.println("IGUAL");
-			if((EXP.tipo == simbolo.Caracter_tipo) && (EXPS1.tipo != simbolo.Caracter_tipo)){
+		System.out.println("Tipo final" +EXPS1.tipo);
+		if (passou){
+			if((EXPS1.tipo == simbolo.Inteiro_tipo) && (EXPS1.tamanho != 0)){
+				//System.out.println("Tipo" + EXPS1.tipo);
+				//System.out.println("tamanho" + EXPS1.tamanho);
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
-			}else{
-				EXP.tipo = simbolo.Logico_tipo;
-			}
-		}else if( operador != "igual"){
-			//System.out.println(" AQI+UI" + EXPS1.tipo);
-			if(EXPS1.tipo != simbolo.Inteiro_tipo){
-				//System.out.println("Tipo final" +EXPS1.tipo);
+			}else if((EXPS1.tipo == simbolo.Logico_tipo) || (EXP.tipo == simbolo.Logico_tipo)){
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
-			}else{
-				EXP.tipo = simbolo.Logico_tipo;
+			}else if( operador == "igual"){
+				System.out.println("IGUAL");
+				if((EXP.tipo == simbolo.Caracter_tipo) && (EXPS1.tipo != simbolo.Caracter_tipo)){
+					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+					System.exit(0);
+				}else{
+					EXP.tipo = simbolo.Logico_tipo;
+				}
+			}else if( operador != "igual"){
+				System.out.println(" AQI+UI" + EXPS1.tipo);
+				if(EXPS1.tipo != simbolo.Inteiro_tipo){
+					//System.out.println("Tipo final" +EXPS1.tipo);
+					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+					System.exit(0);
+				}else{
+					EXP.tipo = simbolo.Logico_tipo;
+				}
 			}
 		}
+		
 
 		return EXP;
 	}

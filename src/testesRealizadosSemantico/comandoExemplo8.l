@@ -13,4 +13,4 @@ for n = a to 3 step 1 do{
 	}
 }
 
-/*Erro esperado: 8:tipos incompativeis*/
+/*Erro esperado: nenhum erro*/

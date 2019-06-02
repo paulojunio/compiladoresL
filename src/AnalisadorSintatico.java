@@ -462,6 +462,10 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
 			
 			/*Acao semantica 21*/
+			if(this.simbolo.token != this.tabelasimbolos.identificador) {
+				System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ]");
+				System.exit(0);
+			}
 			if(simbolo.classe == simbolo.Nenhum_tipo) {
 				System.out.println(analisadorlexico.linha +":identificador nao declarado " + '[' + simbolo.lexema + "].");
 				System.exit(0);

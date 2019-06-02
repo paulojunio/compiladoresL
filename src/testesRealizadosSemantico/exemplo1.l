@@ -8,7 +8,4 @@ Var integer c = 2;
 /* Programa Principal */
 
 
-Const s = 2;
-if c > s then
-	c = 4;
-
+c = 3;

@@ -119,7 +119,7 @@ public class AnalisadorSintatico{
 	* D -> Var { T }+ | Const id ‘=’ [ ‘-’ ] constante ‘;’
 	*/
 	public void D(){
-		System.out.println("Estamos no D");
+		//System.out.println("Estamos no D");
 		if (this.simbolo.token == this.tabelasimbolos.VAR){
 			CasaToken(this.tabelasimbolos.VAR);
 			do {
@@ -185,7 +185,7 @@ public class AnalisadorSintatico{
 	* T -> (integer|char) id [E] {,id[E]}*;
 	*/
 	public void T(){
-		System.out.println("Estamos no T");
+		//System.out.println("Estamos no T");
 		//(char | id)
 		byte tipoDoId = 0;
 		if (this.simbolo.token == this.tabelasimbolos.INTEGER){
@@ -251,7 +251,7 @@ public class AnalisadorSintatico{
 	* E -> = [-] const | "[" const "]"
 	*/
 	public void E(Simbolo idDeclarado){
-		System.out.println("Estamos no E");
+		//System.out.println("Estamos no E");
 		boolean negativo = false;
 		if (this.simbolo.token == this.tabelasimbolos.IGUAL){
 			CasaToken(this.tabelasimbolos.IGUAL);
@@ -321,11 +321,10 @@ public class AnalisadorSintatico{
 			readln ‘(‘ id ‘)’ ‘;’ | write ‘(‘ EXP { ‘,’ EXP }* ‘)’ ‘;’ | writeln ‘(‘ EXP { ‘,’ EXP }* ‘)’ ‘;’
 	*/
 	public void B(){
-		System.out.println("Estou no B");
-		System.out.println(this.simbolo.token);
+		//System.out.println("Estou no B");
+		//System.out.println(this.simbolo.token);
 
 		Simbolo EXP = new Simbolo();
-
 		if(this.simbolo.token == this.tabelasimbolos.identificador){
 			/*Acao semantica 12*/
 			int possicaoVetor = 0;
@@ -353,8 +352,7 @@ public class AnalisadorSintatico{
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
 				}else{
-					//possicaoVetor = EXP.lexema;
-					System.out.println("AAA");
+					possicaoVetor = Integer.parseInt(EXP.lexema);
 					flag = true;
 				}
 				CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
@@ -441,7 +439,7 @@ public class AnalisadorSintatico{
 				System.exit(0);
 			}
 			CasaToken(this.tabelasimbolos.THEN);
-			System.out.println("Voltou aqui");
+			//System.out.println("Voltou aqui");
 			C();
 			
 			if (this.simbolo.token == this.tabelasimbolos.ELSE){
@@ -455,7 +453,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
 			
 			/*Acao semantica 21*/
-			if(simbolo.classe != simbolo.Nenhum_tipo) {
+			if(simbolo.classe == simbolo.Nenhum_tipo) {
 				System.out.println(analisadorlexico.linha +":identificador nao declarado " + '[' + simbolo.lexema + "].");
 				System.exit(0);
 			}else if(simbolo.classe != simbolo.Variavel_classe){
@@ -479,7 +477,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
 			EXP = Exp();
 			/*Acao semantica 22*/
-			if(EXP.tipo == simbolo.Inteiro_tipo && EXP.tamanho != 0) {
+			if((EXP.tipo == simbolo.Inteiro_tipo && EXP.tamanho != 0) || EXP.tipo == simbolo.Logico_tipo) {
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}
@@ -487,7 +485,7 @@ public class AnalisadorSintatico{
 				CasaToken(this.tabelasimbolos.VIRGULA);
 				EXP = Exp();
 				/*Acao semantica 22*/
-				if(EXP.tipo == simbolo.Inteiro_tipo && EXP.tamanho != 0) {
+				if((EXP.tipo == simbolo.Inteiro_tipo && EXP.tamanho != 0 ) || EXP.tipo == simbolo.Logico_tipo) {
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
 				}
@@ -500,7 +498,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
 			EXP = Exp();
 			/*Acao semantica 22*/
-			if(EXP.tipo == simbolo.Inteiro_tipo && EXP.tamanho != 0) {
+			if((EXP.tipo == simbolo.Inteiro_tipo && EXP.tamanho != 0 ) || EXP.tipo == simbolo.Logico_tipo) {
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}
@@ -508,7 +506,7 @@ public class AnalisadorSintatico{
 				CasaToken(this.tabelasimbolos.VIRGULA);
 				EXP = Exp();
 				/*Acao semantica 22*/
-				if(EXP.tipo == simbolo.Inteiro_tipo && EXP.tamanho != 0) {
+				if((EXP.tipo == simbolo.Inteiro_tipo && EXP.tamanho != 0 ) || EXP.tipo == simbolo.Logico_tipo) {
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
 				}	
@@ -536,8 +534,8 @@ public class AnalisadorSintatico{
 	* C -> B | ‘{‘ { B }* ‘}’
 	*/
 	public void C(){
-		System.out.println(("ESTAMOS NO C"));
-		System.out.println(this.simbolo.token);
+		//System.out.println(("ESTAMOS NO C"));
+		//System.out.println(this.simbolo.token);
 		//Simbolo C = new Simbolo();
 		if(this.simbolo.token == this.tabelasimbolos.CHAVES_ABERTO){
 			CasaToken(this.tabelasimbolos.CHAVES_ABERTO);
@@ -567,9 +565,10 @@ public class AnalisadorSintatico{
 	*/
 	public Simbolo Exp(){
 		System.out.println("Estamos no Exp");
-		System.out.println(this.simbolo.token);
+		System.out.println(this.simbolo.lexema);
 		Simbolo EXP = new Simbolo();
 		Simbolo EXPS = ExpS();
+		System.out.println("Volto no Exp");
 		Simbolo EXPS1 = new Simbolo();
 
 		/*Acao semantica 41*/
@@ -578,14 +577,14 @@ public class AnalisadorSintatico{
 
 		String operador = "";
 
-		System.out.println("Verificando");
-		System.out.println(this.simbolo.token);
+		//System.out.println("Verificando");
+		//System.out.println(this.simbolo.token);
 		if(this.simbolo.token == this.tabelasimbolos.IGUAL){
 			System.out.println("IGUAL");
 			CasaToken(this.tabelasimbolos.IGUAL);
-			Simbolo TEMP = ExpS();
-			EXPS1.tipo = TEMP.tipo;
-			EXPS1.tamanho = TEMP.tamanho;
+			//Simbolo TEMP = ExpS();
+			//EXPS1.tipo = TEMP.tipo;
+			//EXPS1.tamanho = TEMP.tamanho;
 
 			/*Acao semantica 42*/
 			if((EXP.tipo != simbolo.Inteiro_tipo) || (EXP.tamanho != 0)){
@@ -601,9 +600,9 @@ public class AnalisadorSintatico{
 			
 		}else if(this.simbolo.token == this.tabelasimbolos.DIFERENTE){
 			CasaToken(this.tabelasimbolos.DIFERENTE);
-			Simbolo TEMP = ExpS();
-			EXPS1.tipo = TEMP.tipo;
-			EXPS1.tamanho = TEMP.tamanho;
+			//Simbolo TEMP = ExpS();
+			//EXPS1.tipo = TEMP.tipo;
+			//EXPS1.tamanho = TEMP.tamanho;
 
 			/*Acao semantica 43*/
 			if((EXP.tipo != simbolo.Inteiro_tipo) || (EXP.tamanho != 0)){
@@ -613,15 +612,15 @@ public class AnalisadorSintatico{
 				operador = "diferente";
 			}
 		}else if(this.simbolo.token == this.tabelasimbolos.MAIOR){
-			System.out.println("Entrou aqui");
+			//System.out.println("Entrou aqui");
 			CasaToken(this.tabelasimbolos.MAIOR);
-			System.out.println("Comecou");
-			Simbolo TEMP = ExpS();
-			EXPS1.tipo = TEMP.tipo;
-			EXPS1.tamanho = TEMP.tamanho;
+			//System.out.println("Comecou");
+			//Simbolo TEMP = ExpS();
+			//EXPS1.tipo = TEMP.tipo;
+			//EXPS1.tamanho = TEMP.tamanho;
 
-			System.out.println("EXPS1_tipo" + EXPS1.tipo + " ");
-			System.out.println("EXPS1_tamanho" + EXPS1.tamanho + " ");
+			//System.out.println("EXPS1_tipo" + EXPS1.tipo + " ");
+			//System.out.println("EXPS1_tamanho" + EXPS1.tamanho + " ");
 			/*Acao semantica 45*/
 			if((EXP.tipo != simbolo.Inteiro_tipo) || (EXP.tamanho != 0)){
 
@@ -632,9 +631,9 @@ public class AnalisadorSintatico{
 			}
 		}else if(this.simbolo.token == this.tabelasimbolos.MENOR){
 			CasaToken(this.tabelasimbolos.MENOR);
-			Simbolo TEMP = ExpS();
-			EXPS1.tipo = TEMP.tipo;
-			EXPS1.tamanho = TEMP.tamanho;
+			//Simbolo TEMP = ExpS();
+			//EXPS1.tipo = TEMP.tipo;
+			//EXPS1.tamanho = TEMP.tamanho;
 
 			/*Acao semantica 44*/
 			if((EXP.tipo != simbolo.Inteiro_tipo) || (EXP.tamanho != 0)){
@@ -646,9 +645,9 @@ public class AnalisadorSintatico{
 
 		}else if(this.simbolo.token == this.tabelasimbolos.MENOR_IGUAL){
 			CasaToken(this.tabelasimbolos.MENOR_IGUAL);
-			Simbolo TEMP = ExpS();
-			EXPS1.tipo = TEMP.tipo;
-			EXPS1.tamanho = TEMP.tamanho;
+			//Simbolo TEMP = ExpS();
+			//EXPS1.tipo = TEMP.tipo;
+			//EXPS1.tamanho = TEMP.tamanho;
 
 			/*Acao semantica 46*/
 			if((EXP.tipo != simbolo.Inteiro_tipo) || (EXP.tamanho != 0)){
@@ -660,9 +659,9 @@ public class AnalisadorSintatico{
 
 		}else if(this.simbolo.token == this.tabelasimbolos.MAIOR_IGUAL){
 			CasaToken(this.tabelasimbolos.MAIOR_IGUAL);
-			Simbolo TEMP = ExpS();
-			EXPS1.tipo = TEMP.tipo;
-			EXPS1.tamanho = TEMP.tamanho;
+			//Simbolo TEMP = ExpS();
+			//EXPS1.tipo = TEMP.tipo;
+			//EXPS1.tamanho = TEMP.tamanho;
 
 			/*Acao semantica 47*/
 			if((EXP.tipo != simbolo.Inteiro_tipo) || (EXP.tamanho != 0)){
@@ -672,19 +671,19 @@ public class AnalisadorSintatico{
 				operador = "maiorIgual";
 			}
 		}
-		//EXPS1 = ExpS();
-		System.out.println("CHEGOU ATE AQUI");
-		System.out.println("Tipo final" +EXPS1.tipo);
+		EXPS1 = ExpS();
+		//System.out.println("CHEGOU ATE AQUI");
+		//System.out.println("Tipo final" +EXPS1.tipo);
 		if((EXPS1.tipo == simbolo.Inteiro_tipo) && (EXPS1.tamanho != 0)){
-			System.out.println("Tipo" + EXPS1.tipo);
-			System.out.println("tamanho" + EXPS1.tamanho);
+			//System.out.println("Tipo" + EXPS1.tipo);
+			//System.out.println("tamanho" + EXPS1.tamanho);
 			System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 			System.exit(0);
 		}else if((EXPS1.tipo == simbolo.Logico_tipo) || (EXP.tipo == simbolo.Logico_tipo)){
 			System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 			System.exit(0);
 		}else if( operador == "igual"){
-			System.out.println("IGUAL");
+			//System.out.println("IGUAL");
 			if((EXP.tipo == simbolo.Caracter_tipo) && (EXPS1.tipo != simbolo.Caracter_tipo)){
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
@@ -692,9 +691,9 @@ public class AnalisadorSintatico{
 				EXP.tipo = simbolo.Logico_tipo;
 			}
 		}else if( operador != "igual"){
-			System.out.println(" AQI+UI" + EXPS1.tipo);
+			//System.out.println(" AQI+UI" + EXPS1.tipo);
 			if(EXPS1.tipo != simbolo.Inteiro_tipo){
-				System.out.println("Tipo final" +EXPS1.tipo);
+				//System.out.println("Tipo final" +EXPS1.tipo);
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}else{
@@ -712,7 +711,7 @@ public class AnalisadorSintatico{
 	*/
 	public Simbolo ExpS(){
 		System.out.println("ESTAMOS NO EXPS");
-		System.out.println("bimbolo" + this.simbolo.token);
+		System.out.println("Simbolo" + this.simbolo.lexema);
 		Simbolo G1 = new Simbolo(); 
 		Simbolo EXPS = new Simbolo(); 
 
@@ -730,7 +729,8 @@ public class AnalisadorSintatico{
 			negativo = true;
 		}
 		Simbolo G = G();
-		System.out.println("Tipo de G" + G.tipo);
+		System.out.println("Volto NO EXPS");
+		//System.out.println("Tipo de G" + G.tipo);
 
 		/*Acao semantica 36*/
 		if((negativo || positivo) && G.tipo != simbolo.Inteiro_tipo){
@@ -740,7 +740,7 @@ public class AnalisadorSintatico{
 			System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 			System.exit(0);
 		}else{
-			System.out.println("ENTROUUU");
+			//System.out.println("ENTROUUU");
 			EXPS.tipo = G.tipo;
 			EXPS.tamanho = G.tamanho;
 		}
@@ -803,8 +803,8 @@ public class AnalisadorSintatico{
 				}
 			}
 		}
-		System.out.println("Estamos no EXPS");
-		System.out.println("Tipo de EXPS" + EXPS.tipo);
+		//System.out.println("Estamos no EXPS");
+		//System.out.println("Tipo de EXPS" + EXPS.tipo);
 		return EXPS;
 
 	}
@@ -815,8 +815,9 @@ public class AnalisadorSintatico{
 	*/
 	public Simbolo G(){
 		System.out.println("Estamos no G");
-		System.out.println(this.simbolo.token);
+		System.out.println(this.simbolo.lexema);
 		Simbolo F = F();
+		System.out.println("Volto no G");
 		Simbolo F1 = new Simbolo();
 		Simbolo G = new Simbolo();
 		String operacao = "";
@@ -908,7 +909,7 @@ public class AnalisadorSintatico{
 				}
 			}
 		}
-		System.out.println("Tipo de G" + G.tipo);
+		//System.out.println("Tipo de G" + G.tipo);
 		return G;
 	}
 
@@ -919,7 +920,7 @@ public class AnalisadorSintatico{
 	*/
 	public Simbolo F(){
 		System.out.println("Estamos no F");
-		System.out.println(this.simbolo.token);
+		System.out.println(this.simbolo.lexema);
 		Simbolo F = new Simbolo();
 
 		if(this.simbolo.token == this.tabelasimbolos.NOT){
@@ -987,7 +988,6 @@ public class AnalisadorSintatico{
 				System.out.println(analisadorlexico.linha + " : fim de arquivo nao esperado");
 				System.exit(0);
 			}else{
-				System.out.println("Maldito");
 				System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ]");
 				System.exit(0);
 			}

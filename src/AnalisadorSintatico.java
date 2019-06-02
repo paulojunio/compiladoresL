@@ -526,7 +526,7 @@ public class AnalisadorSintatico{
 	* C -> B | ‘{‘ { B }* ‘}’
 	*/
 	public void C(){
-
+		Simbolo C = new Simbolo();
 		if(this.simbolo.token == this.tabelasimbolos.CHAVES_ABERTO){
 			CasaToken(this.tabelasimbolos.CHAVES_ABERTO);
 			while(this.simbolo.token == this.tabelasimbolos.identificador || 
@@ -535,11 +535,15 @@ public class AnalisadorSintatico{
 			  this.simbolo.token == this.tabelasimbolos.READLN ||
 			  this.simbolo.token == this.tabelasimbolos.WRITE || 
 			  this.simbolo.token == this.tabelasimbolos.WRITELN ){
-				B();
+				Simbolo B = B();
+				C_tipo = B_tipo;
+				C_tamanho = B_tamanho;
 			}
 			CasaToken(this.tabelasimbolos.CHAVES_FECHADO);
 		}else{
-			B();
+			Simbolo B = B();
+			C_tipo = B_tipo;
+			C_tamanho = B_tamanho;
 		}
 	}
 
@@ -762,6 +766,14 @@ public class AnalisadorSintatico{
 	*/
 	public void G(){
 		Simbolo F = F();
+		Simbolo F1 = new Simbolo();
+		Simbolo G = new Simbolo();
+		String operacao = "";
+
+		/*Acao semantica 28*/
+		G_tipo = F_tipo;
+		G_tamanho = F_tamanho;
+
 		while(this.simbolo.token == this.tabelasimbolos.MULTIPLICACAO ||
 			  this.simbolo.token == this.tabelasimbolos.DIVICAO ||
 			  this.simbolo.token == this.tabelasimbolos.RESTO_DIVISAO ||
@@ -769,16 +781,79 @@ public class AnalisadorSintatico{
 
 			if(this.simbolo.token == this.tabelasimbolos.MULTIPLICACAO){
 				CasaToken(this.tabelasimbolos.MULTIPLICACAO);
-				F();
+
+				/*Acao semantica 29*/
+				if (G_tipo != simbolo.Inteiro_tipo){
+					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+					System.exit(0);
+				}else if(G_tamanhno != 0){
+					System.out.println(this.analisadorlexico.linha + ":tamanho do vetor excede o máximo permitido.");
+					System.exit(0);
+				}else{
+					operacao = "multiplicar";
+				}
+				F1 = F();
 			}else if(this.simbolo.token == this.tabelasimbolos.DIVICAO){
 				CasaToken(this.tabelasimbolos.DIVICAO);
-				F();
+
+				/*Acao semantica 30*/
+				if (G_tipo != simbolo.Inteiro_tipo){
+					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+					System.exit(0);
+				}else if(G_tamanhno != 0){
+					System.out.println(this.analisadorlexico.linha + ":tamanho do vetor excede o máximo permitido.");
+					System.exit(0);
+				}else{
+					operacao = "divisao";
+				}
+				F1 = F();
 			}else if(this.simbolo.token == this.tabelasimbolos.RESTO_DIVISAO){
 				CasaToken(this.tabelasimbolos.RESTO_DIVISAO);
-				F();
+
+				/*Acao semantica 31*/
+				if (G_tipo != simbolo.Inteiro_tipo){
+					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+					System.exit(0);
+				}else if(G_tamanhno != 0){
+					System.out.println(this.analisadorlexico.linha + ":tamanho do vetor excede o máximo permitido.");
+					System.exit(0);
+				}else{
+					operacao = "modulo";
+				}
+				F1 = F();
 			}else if(this.simbolo.token == this.tabelasimbolos.AND){
 				CasaToken(this.tabelasimbolos.AND);
-				F();
+
+				/*Acao semantica 32*/
+				if (G_tipo != simbolo.Logico_tipo){
+					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+					System.exit(0);
+				}else if(G_tamanhno != 0){
+					System.out.println(this.analisadorlexico.linha + ":tamanho do vetor excede o máximo permitido.");
+					System.exit(0);
+				}else{
+					operacao = "and";
+				}
+				F1 = F();
+			}
+			/*Acao semantica 32*/
+			if (F1_tamanho != 0){
+				System.out.println(this.analisadorlexico.linha + ":tamanho do vetor excede o máximo permitido.");
+				System.exit(0);
+			}else if((operacao == "multiplicar") || (operacao == "dividir")){
+				if(F1_tipo != simbolo.Inteiro_tipo){
+					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+					System.exit(0);
+				}else{
+					G_tipo = F1_tipo;
+				}
+			}else if(operacao == "and"){
+				if(F1_tipo != simbolo.Logico_tipo){
+					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+					System.exit(0);
+				}else{
+					G_tipo = F1_tipo;
+				}
 			}
 		}
 		return G;

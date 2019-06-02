@@ -549,26 +549,114 @@ public class AnalisadorSintatico{
 	* EXP -> EXPS [ ( '=' | "<>" | '<' | '>' | "<=" | ">=" ) EXPS ]
 	*/
 	public void Exp(){
-		ExpS();
+
+		Simbolo EXP = new Simbolo();
+		Simbolo EXPS = ExpS();
+		Simbolo EXPS2 = new Simbolo();
+
+		/*Acao semantica 41*/
+		EXP_tipo = EXPS_tipo;
+		EXP_tamanho = EXPS_tamanho;
+
+		String operador = "";
+
 		if(this.simbolo.token == this.tabelasimbolos.IGUAL){
 			CasaToken(this.tabelasimbolos.IGUAL);
-			ExpS();
+			EXPS2 = ExpS();
+
+			/*Acao semantica 42*/
+			if((EXP_tipo != simbolo.Inteiro_tipo) || (EXP_tamanho != 0)){
+				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+				System.exit(0);
+			}else if(EXP_tipo == simbolo.Logico_tipo){
+				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+				System.exit(0);
+			}else{
+				operador = 'igual';
+			}
+			
 		}else if(this.simbolo.token == this.tabelasimbolos.DIFERENTE){
 			CasaToken(this.tabelasimbolos.DIFERENTE);
-			ExpS();
+			EXPS2 = ExpS();
+
+			/*Acao semantica 43*/
+			if((EXP_tipo != simbolo.Inteiro_tipo) || (EXP_tamanho != 0)){
+				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+				System.exit(0);
+			}else{
+				operador = 'diferente';
+			}
 		}else if(this.simbolo.token == this.tabelasimbolos.MAIOR){
 			CasaToken(this.tabelasimbolos.MAIOR);
-			ExpS();
+			EXPS2 = ExpS();
+
+			/*Acao semantica 45*/
+			if((EXP_tipo != simbolo.Inteiro_tipo) || (EXP_tamanho != 0)){
+				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+				System.exit(0);
+			}else{
+				operador = 'maior';
+			}
 		}else if(this.simbolo.token == this.tabelasimbolos.MENOR){
 			CasaToken(this.tabelasimbolos.MENOR);
-			ExpS();
+			EXPS2 = ExpS();
+
+			/*Acao semantica 44*/
+			if((EXP_tipo != simbolo.Inteiro_tipo) || (EXP_tamanho != 0)){
+				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+				System.exit(0);
+			}else{
+				operador = 'menor';
+			}
+
 		}else if(this.simbolo.token == this.tabelasimbolos.MENOR_IGUAL){
 			CasaToken(this.tabelasimbolos.MENOR_IGUAL);
-			ExpS();
+			EXPS2 = ExpS();
+
+			/*Acao semantica 46*/
+			if((EXP_tipo != simbolo.Inteiro_tipo) || (EXP_tamanho != 0)){
+				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+				System.exit(0);
+			}else{
+				operador = 'menorIgual';
+			}
+
 		}else if(this.simbolo.token == this.tabelasimbolos.MAIOR_IGUAL){
 			CasaToken(this.tabelasimbolos.MAIOR_IGUAL);
-			ExpS();
+			EXPS2 = ExpS();
+
+			/*Acao semantica 47*/
+			if((EXP_tipo != simbolo.Inteiro_tipo) || (EXP_tamanho != 0)){
+				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+				System.exit(0);
+			}else{
+				operador = 'maiorIgual';
+			}
 		}
+
+		if((EXPS2_tipo == simbolo.Inteiro_tipo) || (EXPS2_tamanho != 0){
+			System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+			System.exit(0);
+		}else if((EXPS2_tipo == simbolo.Logico_tipo) || (EXP_tipo == simbolo.Logico_tipo)){
+			System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+			System.exit(0);
+		}else if( operador == "igual"){
+			if((EXP_tipo == simbolo.Caracter_tipo) && (EXPS2_tipo != simbolo.Caracter_tipo)){
+				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+				System.exit(0);
+			}else{
+				EXP_tipo = simbolo.Logico_tipo;
+			}
+		}else if( operador != "igual"){
+			if(EXPS2_tipo != simbolo.Inteiro_tipo){
+				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+				System.exit(0);
+			}else{
+				EXP_tipo = simbolo.Logico_tipo;
+			}
+		}
+
+		return EXP;
 	}
 
 
@@ -577,27 +665,95 @@ public class AnalisadorSintatico{
 	* EXPS -> [ '+' | '-' ] G { ( '+' | '-' | or ) G }*
 	*/
 	public void ExpS(){
+		Simbolo G1 = new Simbolo(); 
+		Simbolo EXPS = new Simbolo(); 
+
+		boolean positivo, negativo;
+		String operacao = "";
 		if(this.simbolo.token == this.tabelasimbolos.MAIS){
 			CasaToken(this.tabelasimbolos.MAIS);
+
+			/*Acao semantica 34*/
+			positivo = True;
 		}else if(this.simbolo.token == this.tabelasimbolos.MENOS){
 			CasaToken(this.tabelasimbolos.MENOS);
+			/*Acao semantica 35*/
+			negativo = True;
 		}
-		G();
+		Simbolo G = G();
+
+		/*Acao semantica 36*/
+		if((negativo || positivo) && G_tipo != simbolo.Inteiro_tipo){
+			System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+			System.exit(0);
+		}else if(G_tamanho != 0){
+			System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+			System.exit(0);
+		}else{
+			EXPS_tipo = G_tipo;
+			EXPS_tamanho = G_tamanho;
+		}
 
 		while(this.simbolo.token == this.tabelasimbolos.MAIS ||
 			  this.simbolo.token == this.tabelasimbolos.MENOS ||
 			  this.simbolo.token == this.tabelasimbolos.OR){
 			if(this.simbolo.token == this.tabelasimbolos.MAIS){
 				CasaToken(this.tabelasimbolos.MAIS);
-				G();
+
+				/*Acao semantica 37*/
+				if(EXPS_tipo != simbolo.Inteiro_tipo){
+					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+					System.exit(0);
+				}else{
+					operacao = "somar";
+				}
+
+				Simbolo G1 = G();
+
 			}else if(this.simbolo.token == this.tabelasimbolos.MENOS){
 				CasaToken(this.tabelasimbolos.MENOS);
-				G();
+
+				/*Acao semantica 38*/
+				if(EXPS_tipo != simbolo.Inteiro_tipo){
+					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+					System.exit(0);
+				}else{
+					operacao = "subtrair";
+				}
+
+				Simbolo G1 = G();
 			}else if(this.simbolo.token == this.tabelasimbolos.OR){
 				CasaToken(this.tabelasimbolos.OR);
-				G();
+
+				/*Acao semantica 39*/
+				if(EXPS_tipo != simbolo.Logico_tipo){
+					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+					System.exit(0);
+				}else{
+					operacao = "or";
+				}
+
+				Simbolo G1 = G();;
+			}
+			/*Acao semantica 40*/
+			if ((operacao == "somar") ||(operacao == "subtrair")){
+				if(G1_tipo != simbolo.Inteiro_tipo){
+					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+					System.exit(0);
+				}else{
+					EXPS_tipo = G1_tipo;
+				}
+			}else if(operacao == "or"){
+				if(G1_tipo != simbolo.Logico_tipo){
+					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
+					System.exit(0);
+				}else{
+					EXPS_tipo = G1_tipo;
+				}
 			}
 		}
+		return EXPS;
+
 	}
 
 	/**
@@ -605,7 +761,7 @@ public class AnalisadorSintatico{
 	* G -> F { ( '*' | '/' | '%' | and } F )
 	*/
 	public void G(){
-		F();
+		Simbolo F = F();
 		while(this.simbolo.token == this.tabelasimbolos.MULTIPLICACAO ||
 			  this.simbolo.token == this.tabelasimbolos.DIVICAO ||
 			  this.simbolo.token == this.tabelasimbolos.RESTO_DIVISAO ||
@@ -625,6 +781,7 @@ public class AnalisadorSintatico{
 				F();
 			}
 		}
+		return G;
 	}
 
 
@@ -633,9 +790,13 @@ public class AnalisadorSintatico{
 	* F -> not F | '(' EXP ')' | constante | id [ '[' EXP ']' ]
 	*/
 	public void F(){
+		Simbolo F = new Simbolo();
+      	Simbolo simboloE = new Simbolo();
+
 		if(this.simbolo.token == this.tabelasimbolos.NOT){
 			CasaToken(this.tabelasimbolos.NOT);
-			F();
+			Simbolo F1 = F();
+			/*Acao semantica 23*/
 			if(F1_tipo != simbolo.Logico_tipo) {
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
@@ -645,35 +806,38 @@ public class AnalisadorSintatico{
 			}
 		}else if(this.simbolo.token == this.tabelasimbolos.PARENTESES_ABERTO){
 			CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
-			Exp();
-			F1_tipo = EXP_tipo;
+
+			Simbolo EXP = Exp();
+
+			/*Acao semantica 24*/
 			F_tipo = EXP_tipo;
-			F1_tamanho = EXP_tamanho;
 			F_tamanho = EXP_tamanho;
 			CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
 		}else if(this.simbolo.token == this.tabelasimbolos.constante){
-			F1_tipo = simbolo.tipo;
-			F_tipo = simbolo.tipo;
-			F1_tamanho = simbolo.tamanho;
-			F_tamanho = simbolo.tamanho;
+
+			/*Acao semantica 25*/
+			F_tipo = this.simbolo.tipo;
+			F_tamanho = this.simbolo.tamanho;
 			CasaToken(this.tabelasimbolos.constante);
 		}else if(this.simbolo.token == this.tabelasimbolos.identificador){
 			
 			//acoesSemanticas.verificarID(simbolo,(byte)0);
-			if(simbolo.tipo == simbolo.Nenhum_tipo) {
+			/*Acao semantica 26*/
+			if(this.simbolo.tipo == simbolo.Nenhum_tipo) {
 				System.out.println(analisadorlexico.linha +":identificador nao declarado " + '[' + simbolo.lexema + "].");
 				System.exit(0);
 			}else{
-				F1_tipo = simbolo.tipo;
 				F_tipo = simbolo.tipo;
-				F1_tamanho = simbolo.tamanho;
 				F_tamanho = simbolo.tamanho;
 			}
+
 			Simbolo idDeclarado = simbolo;
 			CasaToken(this.tabelasimbolos.identificador);
 			if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
 				CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
-				Exp();
+
+				/*Acao semantica 27*/
+				Simbolo EXP = Exp();
 				if(EXP_tipo != simbolo.Inteiro_tipo) {
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				  System.exit(0);
@@ -681,9 +845,9 @@ public class AnalisadorSintatico{
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				  System.exit(0);
 				}else{
-					F1_tamanho = 0;
 					F_tamanho = 0;
 				}
+
 				CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
 			}
 		}else{
@@ -696,6 +860,7 @@ public class AnalisadorSintatico{
 				System.exit(0);
 			}
 		}
+		return F;
 	}
 
 

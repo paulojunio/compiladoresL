@@ -31,8 +31,8 @@ public class AnalisadorSintatico{
 	int G1_tamanho;
 	byte EXPS_tipo;
 	int EXPS_tamanho;
-  byte EXPS1_tipo;
-	int EXPS1_tamanho;
+  byte EXPS2_tipo;
+	int EXPS2_tamanho;
   
 	/**
 	* Construtor da classe
@@ -535,15 +535,16 @@ public class AnalisadorSintatico{
 			  this.simbolo.token == this.tabelasimbolos.READLN ||
 			  this.simbolo.token == this.tabelasimbolos.WRITE || 
 			  this.simbolo.token == this.tabelasimbolos.WRITELN ){
-				Simbolo B = B();
-				C_tipo = B_tipo;
-				C_tamanho = B_tamanho;
+				//Simbolo B = B();
+				B();
+				//C_tipo = B_tipo;
+				//C_tamanho = B_tamanho;
 			}
 			CasaToken(this.tabelasimbolos.CHAVES_FECHADO);
 		}else{
-			Simbolo B = B();
-			C_tipo = B_tipo;
-			C_tamanho = B_tamanho;
+			B();
+			//C_tipo = B_tipo;
+			//C_tamanho = B_tamanho;
 		}
 	}
 
@@ -552,7 +553,7 @@ public class AnalisadorSintatico{
 	* Metodo correspondente ao simboolo nao-terminal da gramatica Exp
 	* EXP -> EXPS [ ( '=' | "<>" | '<' | '>' | "<=" | ">=" ) EXPS ]
 	*/
-	public void Exp(){
+	public Simbolo Exp(){
 
 		Simbolo EXP = new Simbolo();
 		Simbolo EXPS = ExpS();
@@ -576,7 +577,7 @@ public class AnalisadorSintatico{
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}else{
-				operador = 'igual';
+				operador = "igual";
 			}
 			
 		}else if(this.simbolo.token == this.tabelasimbolos.DIFERENTE){
@@ -588,18 +589,22 @@ public class AnalisadorSintatico{
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}else{
-				operador = 'diferente';
+				operador = "diferente";
 			}
 		}else if(this.simbolo.token == this.tabelasimbolos.MAIOR){
+			System.out.println("Entrou aqui");
 			CasaToken(this.tabelasimbolos.MAIOR);
+			System.out.println("Comecou");
 			EXPS2 = ExpS();
 
+			System.out.println(EXPS2_tipo + " ");
+			System.out.println(EXPS2_tamanho + " ");
 			/*Acao semantica 45*/
 			if((EXP_tipo != simbolo.Inteiro_tipo) || (EXP_tamanho != 0)){
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}else{
-				operador = 'maior';
+				operador = "maior";
 			}
 		}else if(this.simbolo.token == this.tabelasimbolos.MENOR){
 			CasaToken(this.tabelasimbolos.MENOR);
@@ -610,7 +615,7 @@ public class AnalisadorSintatico{
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}else{
-				operador = 'menor';
+				operador = "menor";
 			}
 
 		}else if(this.simbolo.token == this.tabelasimbolos.MENOR_IGUAL){
@@ -622,7 +627,7 @@ public class AnalisadorSintatico{
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}else{
-				operador = 'menorIgual';
+				operador = "menorIgual";
 			}
 
 		}else if(this.simbolo.token == this.tabelasimbolos.MAIOR_IGUAL){
@@ -634,11 +639,11 @@ public class AnalisadorSintatico{
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}else{
-				operador = 'maiorIgual';
+				operador = "maiorIgual";
 			}
 		}
 
-		if((EXPS2_tipo == simbolo.Inteiro_tipo) || (EXPS2_tamanho != 0){
+		if((EXPS2_tipo == simbolo.Inteiro_tipo) || (EXPS2_tamanho != 0)){
 			System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 			System.exit(0);
 		}else if((EXPS2_tipo == simbolo.Logico_tipo) || (EXP_tipo == simbolo.Logico_tipo)){
@@ -652,6 +657,7 @@ public class AnalisadorSintatico{
 				EXP_tipo = simbolo.Logico_tipo;
 			}
 		}else if( operador != "igual"){
+			System.out.println(" " + EXPS2_tipo);
 			if(EXPS2_tipo != simbolo.Inteiro_tipo){
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
@@ -668,23 +674,25 @@ public class AnalisadorSintatico{
 	* Metodo correspondente ao simboolo nao-terminal da gramatica ExpS
 	* EXPS -> [ '+' | '-' ] G { ( '+' | '-' | or ) G }*
 	*/
-	public void ExpS(){
+	public Simbolo ExpS(){
 		Simbolo G1 = new Simbolo(); 
 		Simbolo EXPS = new Simbolo(); 
 
-		boolean positivo, negativo;
+		boolean positivo = false;
+		boolean negativo = false;
 		String operacao = "";
 		if(this.simbolo.token == this.tabelasimbolos.MAIS){
 			CasaToken(this.tabelasimbolos.MAIS);
 
 			/*Acao semantica 34*/
-			positivo = True;
+			positivo = true;
 		}else if(this.simbolo.token == this.tabelasimbolos.MENOS){
 			CasaToken(this.tabelasimbolos.MENOS);
 			/*Acao semantica 35*/
-			negativo = True;
+			negativo = true;
 		}
 		Simbolo G = G();
+		System.out.println("Tipo de G" + G_tamanho);
 
 		/*Acao semantica 36*/
 		if((negativo || positivo) && G_tipo != simbolo.Inteiro_tipo){
@@ -694,6 +702,7 @@ public class AnalisadorSintatico{
 			System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 			System.exit(0);
 		}else{
+			System.out.println("ENTROUUU");
 			EXPS_tipo = G_tipo;
 			EXPS_tamanho = G_tamanho;
 		}
@@ -712,7 +721,7 @@ public class AnalisadorSintatico{
 					operacao = "somar";
 				}
 
-				Simbolo G1 = G();
+				G1 = G();
 
 			}else if(this.simbolo.token == this.tabelasimbolos.MENOS){
 				CasaToken(this.tabelasimbolos.MENOS);
@@ -725,7 +734,7 @@ public class AnalisadorSintatico{
 					operacao = "subtrair";
 				}
 
-				Simbolo G1 = G();
+				G1 = G();
 			}else if(this.simbolo.token == this.tabelasimbolos.OR){
 				CasaToken(this.tabelasimbolos.OR);
 
@@ -737,7 +746,7 @@ public class AnalisadorSintatico{
 					operacao = "or";
 				}
 
-				Simbolo G1 = G();;
+				G1 = G();;
 			}
 			/*Acao semantica 40*/
 			if ((operacao == "somar") ||(operacao == "subtrair")){
@@ -756,6 +765,8 @@ public class AnalisadorSintatico{
 				}
 			}
 		}
+		System.out.println("Estamos no EXPS");
+		System.out.println("Tipo de EXPS" + EXPS_tipo);
 		return EXPS;
 
 	}
@@ -764,7 +775,7 @@ public class AnalisadorSintatico{
 	* Metodo correspondente ao simboolo nao-terminal da gramatica G
 	* G -> F { ( '*' | '/' | '%' | and } F )
 	*/
-	public void G(){
+	public Simbolo G(){
 		Simbolo F = F();
 		Simbolo F1 = new Simbolo();
 		Simbolo G = new Simbolo();
@@ -786,7 +797,7 @@ public class AnalisadorSintatico{
 				if (G_tipo != simbolo.Inteiro_tipo){
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
-				}else if(G_tamanhno != 0){
+				}else if(G_tamanho != 0){
 					System.out.println(this.analisadorlexico.linha + ":tamanho do vetor excede o máximo permitido.");
 					System.exit(0);
 				}else{
@@ -800,7 +811,7 @@ public class AnalisadorSintatico{
 				if (G_tipo != simbolo.Inteiro_tipo){
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
-				}else if(G_tamanhno != 0){
+				}else if(G_tamanho != 0){
 					System.out.println(this.analisadorlexico.linha + ":tamanho do vetor excede o máximo permitido.");
 					System.exit(0);
 				}else{
@@ -814,7 +825,7 @@ public class AnalisadorSintatico{
 				if (G_tipo != simbolo.Inteiro_tipo){
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
-				}else if(G_tamanhno != 0){
+				}else if(G_tamanho != 0){
 					System.out.println(this.analisadorlexico.linha + ":tamanho do vetor excede o máximo permitido.");
 					System.exit(0);
 				}else{
@@ -828,7 +839,7 @@ public class AnalisadorSintatico{
 				if (G_tipo != simbolo.Logico_tipo){
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
-				}else if(G_tamanhno != 0){
+				}else if(G_tamanho != 0){
 					System.out.println(this.analisadorlexico.linha + ":tamanho do vetor excede o máximo permitido.");
 					System.exit(0);
 				}else{
@@ -864,7 +875,7 @@ public class AnalisadorSintatico{
 	* Metodo correspondente ao simboolo nao-terminal da gramatica F
 	* F -> not F | '(' EXP ')' | constante | id [ '[' EXP ']' ]
 	*/
-	public void F(){
+	public Simbolo F(){
 		Simbolo F = new Simbolo();
       	Simbolo simboloE = new Simbolo();
 

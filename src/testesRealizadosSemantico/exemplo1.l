@@ -9,6 +9,6 @@ Var integer c = 2;
 
 
 Const s = 2;
-if c > s{
+if c > s then
 	c = 4;
-}
+

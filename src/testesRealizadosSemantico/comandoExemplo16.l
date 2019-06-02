@@ -4,9 +4,9 @@ Var integer a = -2;
 Var integer b = -2;
 Var integer n;
 Var Char k[8];
-a = -9;
+Var char oi[10];
 /*Programa Principal*/
-
+a = -9;
 for n = a to 3 step 1 do{
 	if(a < 5) then{
 		a = 2;
@@ -16,4 +16,4 @@ for n = a to 3 step 1 do{
 }
 readln(b);
 
-/*Erro esperado: nenhum erro, mas tem erro na atribuicao negativa*/
+/*Erro esperado: nenhum erro*/

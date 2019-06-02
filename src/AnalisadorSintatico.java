@@ -742,6 +742,7 @@ public class AnalisadorSintatico{
 		boolean positivo = false;
 		boolean negativo = false;
 		String operacao = "";
+
 		if(this.simbolo.token == this.tabelasimbolos.MAIS){
 			CasaToken(this.tabelasimbolos.MAIS);
 
@@ -750,6 +751,7 @@ public class AnalisadorSintatico{
 			entrou = true;
 		}else if(this.simbolo.token == this.tabelasimbolos.MENOS){
 			CasaToken(this.tabelasimbolos.MENOS);
+			System.out.println("Entrou aqui231");
 			/*Acao semantica 35*/
 			negativo = true;
 			entrou = true;
@@ -761,18 +763,23 @@ public class AnalisadorSintatico{
 		
 		/*Acao semantica 36*/
 		if((negativo || positivo)){
+			System.out.println("vem aqui");
 			if(G.tipo != simbolo.Inteiro_tipo){
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}else if(G.tamanho != 0){
 			System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 			System.exit(0);
+			}else{
+				EXPS.tipo = G.tipo;
+				EXPS.tamanho = G.tamanho;
+				EXPS.lexema = G.lexema;
 			}
 	  }else{
-			//System.out.println("ENTROUUU");
 			EXPS.tipo = G.tipo;
 			EXPS.tamanho = G.tamanho;
 			EXPS.lexema = G.lexema;
+			//System.out.println("ENTROUUU" + " TIPO: " + EXPS.tipo + " Tamanho: " + EXPS.tamanho + " Lexema: " + EXPS.lexema);
 		}
 	  
 		while(this.simbolo.token == this.tabelasimbolos.MAIS ||

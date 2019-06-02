@@ -1,5 +1,5 @@
 /* Exemplo de Programa na linguagem L */
 
-Const a = "oi";
+Var char paulo = "junio";
 
 /*Erro esperado: 3:tipos incompativeis*/

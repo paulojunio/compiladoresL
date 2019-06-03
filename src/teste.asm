@@ -6,8 +6,8 @@ byte 4000h DUP(?) ;temporários
 byte 'i'; caracter declarado na posicao: 16384 Simbolo:a
 sword 1; inteiro declarado na posicao: 16385 Simbolo:n
 sword 4; inteiro declarado na posicao: 16387 Simbolo:b
-sword 2000 DUP(?); inteiro vetor declarado na posicao: 16389 Simbolo: paulo
-byte 'a'; caracter declarado na posicao: 20389 Simbolo:c
+byte 2000 DUP(?); caracter vetor declarado na posicao: 16389 Simbolo: paulo
+byte 'a'; caracter declarado na posicao: 18389 Simbolo:c
 dseg ENDS ;fim seg. dados
 cseg SEGMENT PUBLIC ;início seg. código
 ASSUME CS:cseg, DS:dseg

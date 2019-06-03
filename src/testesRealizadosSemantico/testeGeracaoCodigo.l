@@ -1,4 +1,4 @@
-/* Exemplo de Programa na linguagem L Geracao de declaracao*/
+/* Exemplo de Programa na linguagem L Geracao de codigo de declaracao*/
 
 Var Char a = 'i';
 Var integer n = 1;

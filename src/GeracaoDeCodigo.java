@@ -122,4 +122,32 @@ public class GeracaoDeCodigo {
             System.out.println("Erro ao escrever no arquivo asm.");
         }
     }
+
+    public void declararString(String lexema) {
+        try{
+            arquivoAsm.append("dseg SEGMENT PUBLIC ; declarando string");
+            arquivoAsm.append("byte "+ "\"" + lexema + "\" ; string" + "\n");
+            arquivoAsm.append("dseg ENDS ; fim da string");
+        }catch(Exception e) {
+            System.out.println("Erro ao escrever no arquivo asm.");
+        }
+    }
+    public void escreverComandos(String comando) {
+        try{
+            arquivoAsm.append(comando + "\n");
+        }catch(Exception e){
+            System.out.println("Erro ao escrever no arquivo asm.");
+        }
+    }
+
+    public int novoTemp(int i){
+        int novoTemp = contadorTemporarios;
+        contadorTemporarios += i;
+        return novoTemp;
+    }
+
+    public void resetTemp() {
+        contadorTemporarios = 0;
+    }
+
 }

@@ -174,8 +174,10 @@ public class AnalisadorSintatico{
 				idDeclarado.tipo = constanteDeclarada.tipo;
 				if(idDeclarado.tipo == this.simbolo.Caracter_tipo) {
 					geracaoDeCodigo.adicionarCaracter(idDeclarado, constanteDeclarada.lexema);
+					System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
 				}else{
 					geracaoDeCodigo.adicionarInteiro(idDeclarado, constanteDeclarada.lexema);
+					System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
 				}
 			}
 
@@ -308,8 +310,10 @@ public class AnalisadorSintatico{
 				}
 				if(idDeclarado.tipo == this.simbolo.Caracter_tipo) {
 					geracaoDeCodigo.adicionarCaracter(idDeclarado,constanteDeclarada.lexema);
+					System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
 				}else{
 					geracaoDeCodigo.adicionarInteiro(idDeclarado,constanteDeclarada.lexema);
+					System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
 				}
 			}
 		}else if (this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
@@ -332,6 +336,7 @@ public class AnalisadorSintatico{
 			}else{
 				idDeclarado.tamanho = Integer.parseInt(constanteDeclarada.lexema);
 				geracaoDeCodigo.adicionarVetor(idDeclarado);
+				System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
 			}
 
 			CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
@@ -402,6 +407,7 @@ public class AnalisadorSintatico{
 			
 			/*Acao semantica 14*/
 			//System.out.println("Tamanho id" + idDeclarado.tipo); PRINT DEBUG
+			//System.out.println("Exp: " + EXP.lexema.substring(1,EXP.tamanho));
 			if(flag == false) {
 				if(idDeclarado.tamanho != 0 && idDeclarado.tipo == simbolo.Inteiro_tipo) {
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
@@ -1028,6 +1034,12 @@ public class AnalisadorSintatico{
 				F.tipo = F1.tipo;
 				F.tamanho = F1.tamanho;
 				F.lexema = F1.lexema;
+				/*Geracao de codigo*/
+				F.endereco = geracaoDeCodigo.novoTemp(1);
+				geracaoDeCodigo.escreverComandos("mov ax, " + F1.endereco);
+				geracaoDeCodigo.escreverComandos("neg ax");
+				geracaoDeCodigo.escreverComandos("add ax, 1");
+				geracaoDeCodigo.escreverComandos("mov DS:[" + F.endereco + "] " + ", ax");
 			}
 		}else if(this.simbolo.token == this.tabelasimbolos.PARENTESES_ABERTO){
 			CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
@@ -1038,6 +1050,9 @@ public class AnalisadorSintatico{
 			F.tipo = EXP.tipo;
 			F.tamanho = EXP.tamanho;
 			F.lexema = EXP.lexema;
+			/*Geracao codigo*/
+			F.endereco = EXP.endereco;
+
 			CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
 		}else if(this.simbolo.token == this.tabelasimbolos.constante){
 
@@ -1048,6 +1063,28 @@ public class AnalisadorSintatico{
 			F.tipo = constanteDeclarado.tipo;
 			F.tamanho = constanteDeclarado.tamanho;
 			F.lexema = constanteDeclarado.lexema;
+			/*Geracao de codigo*/
+			if(F.tipo == simbolo.Caracter_tipo && F.tamanho != 0) {
+				F.endereco = geracaoDeCodigo.contadorVariaveis; 
+				String valor = F.lexema.substring(1,F.tamanho);
+				int tamanho = F.tamanho - 2;
+				valor += '$';
+				geracaoDeCodigo.contadorVariaveis += F.tamanho;
+				geracaoDeCodigo.declararString(valor);
+			}else{
+				if(F.tipo == simbolo.Caracter_tipo) {
+					F.endereco = geracaoDeCodigo.novoTemp(1);
+					geracaoDeCodigo.escreverComandos("mov ax , " + F.lexema); 
+					geracaoDeCodigo.escreverComandos("mov DS:[" + F.endereco + "] " + ", ax");
+					geracaoDeCodigo.contadorVariaveis += 1;
+				}else if(F.tipo == simbolo.Inteiro_tipo){
+					F.endereco = geracaoDeCodigo.novoTemp(2);
+					geracaoDeCodigo.escreverComandos("mov ax , " + F.lexema); 
+					geracaoDeCodigo.escreverComandos("mov DS:[" + F.endereco + "] " + ", ax");
+					geracaoDeCodigo.contadorVariaveis += 2;
+				}
+			}
+
 		}else if(this.simbolo.token == this.tabelasimbolos.identificador){
 			
 			//acoesSemanticas.verificarID(simbolo,(byte)0);
@@ -1064,6 +1101,8 @@ public class AnalisadorSintatico{
 				F.tipo = idDeclarado.tipo;
 				F.tamanho = idDeclarado.tamanho;
 				F.lexema = idDeclarado.lexema;
+				/*Geracao de codigo*/
+				F.endereco = idDeclarado.endereco;
 			}
 
 			if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
@@ -1079,6 +1118,21 @@ public class AnalisadorSintatico{
 				  System.exit(0);
 				}else{
 					F.tamanho = 0;
+					/*Geracao de codigo*/
+					if(idDeclarado.tipo == this.simbolo.Caracter_tipo) {
+						geracaoDeCodigo.escreverComandos("mov di , " + "DS:[" + EXP.endereco + "]");
+						geracaoDeCodigo.escreverComandos("add di , di");
+						geracaoDeCodigo.escreverComandos("add di , " + idDeclarado.endereco);
+						geracaoDeCodigo.escreverComandos("mov ax , DS:[di]");
+						F.endereco = geracaoDeCodigo.novoTemp(2);
+						geracaoDeCodigo.escreverComandos("mov " + "DS:[" + F.endereco + "]" + " , ax");
+					}else if(idDeclarado.tipo == this.simbolo.Inteiro_tipo){
+						geracaoDeCodigo.escreverComandos("mov di , " + "DS:[" + EXP.endereco + "]");
+						geracaoDeCodigo.escreverComandos("add di , " + idDeclarado.endereco);
+						geracaoDeCodigo.escreverComandos("mov ax , DS:[di]");
+						F.endereco = geracaoDeCodigo.novoTemp(1);
+						geracaoDeCodigo.escreverComandos("mov " + "DS:[" + F.endereco + "]" + " , ax");
+					}
 				}
 
 				CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);

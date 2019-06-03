@@ -826,14 +826,24 @@ public class AnalisadorSintatico{
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}else{
+				if(negativo) {
+					geracaoDeCodigo.escreverComandos("mov ax , " + "DS:[" + G.endereco + "]");
+					G.endereco = geracaoDeCodigo.novoTemp(2);
+					geracaoDeCodigo.escreverComandos("neg ax");
+					geracaoDeCodigo.escreverComandos("mov DS:[" + G.endereco + "]" + " , ax");
+				}
 				EXPS.tipo = G.tipo;
 				EXPS.tamanho = G.tamanho;
 				EXPS.lexema = G.lexema;
+				/*Geracao de codigo*/
+				EXPS.endereco = G.endereco;
 			}
 	  }else{
 			EXPS.tipo = G.tipo;
 			EXPS.tamanho = G.tamanho;
 			EXPS.lexema = G.lexema;
+			/*Geracao de codigo*/
+			EXPS.endereco = G.endereco;
 			//System.out.println("ENTROUUU" + " TIPO: " + EXPS.tipo + " Tamanho: " + EXPS.tamanho + " Lexema: " + EXPS.lexema);
 		}
 	  
@@ -885,7 +895,7 @@ public class AnalisadorSintatico{
 				G1 = G();
 			}
 			/*Acao semantica 40*/
-			if ((operacao == "somar") ||(operacao == "subtrair")){
+			if (operacao.equals("somar") || operacao.equals("subtrair")){
 				if(G1.tipo != EXPS.tipo){
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
@@ -894,6 +904,17 @@ public class AnalisadorSintatico{
 					System.exit(0);
 				}else{
 					EXPS.tipo = G1.tipo;
+					/*Geracao de codigo*/
+					geracaoDeCodigo.escreverComandos("mov ax , " + "DS:[" + EXPS.endereco + "]");
+					geracaoDeCodigo.escreverComandos("mov bx , " + "DS:[" + G1.endereco + "]");
+					if(operacao.equals("somar")) {
+						geracaoDeCodigo.escreverComandos("add ax , bx");
+					}else if(operacao.equals("subtrair")) {
+						geracaoDeCodigo.escreverComandos("neg bx");
+						geracaoDeCodigo.escreverComandos("add ax , bx");
+					}
+					EXPS.endereco = geracaoDeCodigo.novoTemp(2);
+					geracaoDeCodigo.escreverComandos("mov " + "DS:[" + EXPS.endereco + "]" + ", ax");
 				}
 			}else if(operacao == "or"){
 				if(G1.tipo != simbolo.Logico_tipo){
@@ -901,6 +922,7 @@ public class AnalisadorSintatico{
 					System.exit(0);
 				}else{
 					EXPS.tipo = G1.tipo;
+
 				}
 			}
 		}
@@ -927,6 +949,8 @@ public class AnalisadorSintatico{
 		G.tipo = F.tipo;
 		G.tamanho = F.tamanho;
 		G.lexema = F.lexema;
+		/*Geracao de codigo*/
+		G.endereco = F.endereco;
 
 		while(this.simbolo.token == this.tabelasimbolos.MULTIPLICACAO ||
 			  this.simbolo.token == this.tabelasimbolos.DIVICAO ||
@@ -990,7 +1014,7 @@ public class AnalisadorSintatico{
 			/*Acao semantica 32*/
 
 			
-			if((operacao == "multiplicar") || (operacao == "divisao") || (operacao == "modulo")){
+			if(operacao.equals("multiplicar") || operacao.equals("divisao") || operacao.equals("modulo")){
 				if(F1.tipo != G.tipo){
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
@@ -999,13 +1023,32 @@ public class AnalisadorSintatico{
 					System.exit(0);
 				}else{
 					G.tipo = F1.tipo;
+					geracaoDeCodigo.escreverComandos("mov ax , " + "DS:[" + G.endereco + "]");
+					geracaoDeCodigo.escreverComandos("mov bx , " + "DS:[" + F1.endereco + "]");
+					if(operacao.equals("multiplicar")) {
+						geracaoDeCodigo.escreverComandos("imul bx");
+					}else if(operacao.equals("divisao")){
+						geracaoDeCodigo.escreverComandos("mov dx , 0");
+						geracaoDeCodigo.escreverComandos("idiv bx");
+					}else if(operacao.equals("modulo")) {
+						geracaoDeCodigo.escreverComandos("mov dx , 0");
+						geracaoDeCodigo.escreverComandos("idiv bx");
+						geracaoDeCodigo.escreverComandos("mov ax , dx");
+					}
+					G.endereco = geracaoDeCodigo.novoTemp(2);
+					geracaoDeCodigo.escreverComandos("mov " + "DS:[" + G.endereco + "]" + ", ax");
 				}
-			}else if(operacao == "and"){
+			}else if(operacao.equals("and")){
 				if(F1.tipo != simbolo.Logico_tipo){
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
 				}else{
 					G.tipo = F1.tipo;
+					geracaoDeCodigo.escreverComandos("mov ax , " + "DS:[" + G.endereco + "]");
+					geracaoDeCodigo.escreverComandos("mov bx , " + "DS:[" + F1.endereco + "]");
+					geracaoDeCodigo.escreverComandos("imul bx");
+					G.endereco = geracaoDeCodigo.novoTemp(1); //Tipo logico 1 byte?
+					geracaoDeCodigo.escreverComandos("mov " + "DS:[" + G.endereco + "]" + ", ax");
 				}
 			}
 		}
@@ -1035,7 +1078,7 @@ public class AnalisadorSintatico{
 				F.tamanho = F1.tamanho;
 				F.lexema = F1.lexema;
 				/*Geracao de codigo*/
-				F.endereco = geracaoDeCodigo.novoTemp(1);
+				F.endereco = geracaoDeCodigo.novoTemp(1); //Tipo logico 1 byte ?
 				geracaoDeCodigo.escreverComandos("mov ax, " + F1.endereco);
 				geracaoDeCodigo.escreverComandos("neg ax");
 				geracaoDeCodigo.escreverComandos("add ax, 1");

@@ -639,6 +639,8 @@ public class AnalisadorSintatico{
 		EXP.tipo = EXPS.tipo;
 		EXP.tamanho = EXPS.tamanho;
 		EXP.lexema = EXPS.lexema;
+		/*Geracao de codigo*/
+		EXP.endereco = EXPS.endereco;
 		String operador = "";
 		boolean passou = false;
 
@@ -647,9 +649,6 @@ public class AnalisadorSintatico{
 		if(this.simbolo.token == this.tabelasimbolos.IGUAL){
 			//System.out.println("IGUAL"); //PRINT DEBUG
 			CasaToken(this.tabelasimbolos.IGUAL);
-			//Simbolo TEMP = ExpS();
-			//EXPS1.tipo = TEMP.tipo;
-			//EXPS1.tamanho = TEMP.tamanho;
 
 			/*Acao semantica 42*/
 			if((EXP.tipo == simbolo.Inteiro_tipo) && (EXP.tamanho != 0)){ //Concertado erro (EXP.tipo != simbolo.Inteiro_tipo) || (EXP.tamanho != 0)
@@ -666,10 +665,7 @@ public class AnalisadorSintatico{
 			EXPS1 = ExpS();
 		}else if(this.simbolo.token == this.tabelasimbolos.DIFERENTE){
 			CasaToken(this.tabelasimbolos.DIFERENTE);
-			//Simbolo TEMP = ExpS();
-			//EXPS1.tipo = TEMP.tipo;
-			//EXPS1.tamanho = TEMP.tamanho;
-
+			
 			/*Acao semantica 43*/
 			if((EXP.tipo != simbolo.Inteiro_tipo) || (EXP.tamanho != 0)){
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
@@ -683,10 +679,6 @@ public class AnalisadorSintatico{
 			//System.out.println("Entrou aqui");
 			CasaToken(this.tabelasimbolos.MAIOR);
 			//System.out.println("Comecou");
-			//Simbolo TEMP = ExpS();
-			//EXPS1.tipo = TEMP.tipo;
-			//EXPS1.tamanho = TEMP.tamanho;
-
 			//System.out.println("EXPS1_tipo" + EXPS1.tipo + " ");
 			//System.out.println("EXPS1_tamanho" + EXPS1.tamanho + " ");
 			/*Acao semantica 45*/
@@ -701,9 +693,6 @@ public class AnalisadorSintatico{
 			EXPS1 = ExpS();
 		}else if(this.simbolo.token == this.tabelasimbolos.MENOR){
 			CasaToken(this.tabelasimbolos.MENOR);
-			//Simbolo TEMP = ExpS();
-			//EXPS1.tipo = TEMP.tipo;
-			//EXPS1.tamanho = TEMP.tamanho;
 
 			/*Acao semantica 44*/
 			if((EXP.tipo != simbolo.Inteiro_tipo) || (EXP.tamanho != 0)){
@@ -717,9 +706,6 @@ public class AnalisadorSintatico{
 
 		}else if(this.simbolo.token == this.tabelasimbolos.MENOR_IGUAL){
 			CasaToken(this.tabelasimbolos.MENOR_IGUAL);
-			//Simbolo TEMP = ExpS();
-			//EXPS1.tipo = TEMP.tipo;
-			//EXPS1.tamanho = TEMP.tamanho;
 
 			/*Acao semantica 46*/
 			if((EXP.tipo != simbolo.Inteiro_tipo) || (EXP.tamanho != 0)){
@@ -733,9 +719,6 @@ public class AnalisadorSintatico{
 
 		}else if(this.simbolo.token == this.tabelasimbolos.MAIOR_IGUAL){
 			CasaToken(this.tabelasimbolos.MAIOR_IGUAL);
-			//Simbolo TEMP = ExpS();
-			//EXPS1.tipo = TEMP.tipo;
-			//EXPS1.tamanho = TEMP.tamanho;
 
 			/*Acao semantica 47*/
 			if((EXP.tipo != simbolo.Inteiro_tipo) || (EXP.tamanho != 0)){
@@ -752,28 +735,43 @@ public class AnalisadorSintatico{
 		//System.out.println("Tipo final EXPS1 " + EXPS1.tipo); PRINT DEBUG
 		if (passou){
 			if((EXPS1.tipo == simbolo.Inteiro_tipo) && (EXPS1.tamanho != 0)){
-				//System.out.println("Tipo" + EXPS1.tipo);
-				//System.out.println("tamanho" + EXPS1.tamanho);
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}else if((EXPS1.tipo == simbolo.Logico_tipo) || (EXP.tipo == simbolo.Logico_tipo)){
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
-			}else if( operador == "igual"){
+			}else if( operador.equals("igual")){
 				//System.out.println("IGUAL"); 
 				if((EXP.tipo != EXPS1.tipo)){
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
 				}else{
+					geracaoDeCodigo.escreverComandos("mov ax , " + "DS:[" + EXP.endereco + "]");
+					geracaoDeCodigo.escreverComandos("mov bx , " + "DS:[" + EXPS1.endereco + "]");
+					geracaoDeCodigo.escreverComandos("");
 					EXP.tipo = simbolo.Logico_tipo;
 				}
-			}else if( operador != "igual"){
+			}else if( !operador.equals("igual") ){
 				//System.out.println(" AQI+UI" + EXPS1.tipo);
 				if(EXPS1.tipo != simbolo.Inteiro_tipo){
 					//System.out.println("Tipo final" +EXPS1.tipo);
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
 				}else{
+					geracaoDeCodigo.escreverComandos("mov ax , " + "DS:[" + EXP.endereco + "]");
+					geracaoDeCodigo.escreverComandos("mov bx , " + "DS:[" + EXPS1.endereco + "]");
+					geracaoDeCodigo.escreverComandos("cmp ax , bx");
+					if(operador.equals("diferente")) {
+
+					}else if(operador.equals("maior")) {
+
+					}else if(operador.equals("menor")) {
+
+					}else if(operador.equals("menorIgual")) {
+
+					}else if(operador.equals("maiorIgual")) {
+
+					}
 					EXP.tipo = simbolo.Logico_tipo;
 				}
 			}
@@ -910,8 +908,8 @@ public class AnalisadorSintatico{
 					if(operacao.equals("somar")) {
 						geracaoDeCodigo.escreverComandos("add ax , bx");
 					}else if(operacao.equals("subtrair")) {
-						geracaoDeCodigo.escreverComandos("neg bx");
-						geracaoDeCodigo.escreverComandos("add ax , bx");
+						//geracaoDeCodigo.escreverComandos("neg bx");
+						geracaoDeCodigo.escreverComandos("sub ax , bx");
 					}
 					EXPS.endereco = geracaoDeCodigo.novoTemp(2);
 					geracaoDeCodigo.escreverComandos("mov " + "DS:[" + EXPS.endereco + "]" + ", ax");
@@ -922,7 +920,12 @@ public class AnalisadorSintatico{
 					System.exit(0);
 				}else{
 					EXPS.tipo = G1.tipo;
-
+					//Como fazer o or em 0x8086
+					geracaoDeCodigo.escreverComandos("mov ax , " + "DS:[" + EXPS.endereco + "]");
+					geracaoDeCodigo.escreverComandos("mov bx , " + "DS:[" + G1.endereco + "]");
+					geracaoDeCodigo.escreverComandos("imul bx");
+					EXPS.endereco = geracaoDeCodigo.novoTemp(1); //Tipo logico 1 byte?
+					geracaoDeCodigo.escreverComandos("mov " + "DS:[" + EXPS.endereco + "]" + ", ax");
 				}
 			}
 		}
@@ -1044,6 +1047,7 @@ public class AnalisadorSintatico{
 					System.exit(0);
 				}else{
 					G.tipo = F1.tipo;
+					//Verificar como faz and em 0x8086?
 					geracaoDeCodigo.escreverComandos("mov ax , " + "DS:[" + G.endereco + "]");
 					geracaoDeCodigo.escreverComandos("mov bx , " + "DS:[" + F1.endereco + "]");
 					geracaoDeCodigo.escreverComandos("imul bx");

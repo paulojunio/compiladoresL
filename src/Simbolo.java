@@ -5,7 +5,7 @@
 * @author Giovanna Avila Riqueti
 * @author Paulo Junio Reis Rodrigues
 * @version 1
-* Data: 17/04/2019
+* Data: 03/06/2019
 */
 
 //Classe referente ao simbolo
@@ -16,7 +16,8 @@ public class Simbolo{
     public int tamanho;
     public byte tipo;
     public byte classe;
-    private int endereco;
+    public int endereco;
+    
 
     public static final byte Nenhuma_classe = 0; // Nenhuma classe = 0
     public static final byte Constante_classe = 1;// classe constante = 1

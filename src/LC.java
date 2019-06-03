@@ -15,9 +15,10 @@ public class LC{
             System.setProperty("file.encoding", "UTF-8");
 
             String fileName = args[0];
+            String fileNameAsm = args[1];
             TabelaSimbolos tabelaSimbolos = new TabelaSimbolos();
             BufferedReader code = new BufferedReader(new FileReader(fileName));
-            AnalisadorSintatico b = new AnalisadorSintatico(code);
+            AnalisadorSintatico b = new AnalisadorSintatico(code,fileNameAsm);
             b.S();
 
             //Teste do lexico 

@@ -239,10 +239,10 @@ public class AnalisadorSintatico{
 		}else{
 			if(idDeclarado.tipo == this.simbolo.Caracter_tipo) {
 				geracaoDeCodigo.adicionarCaracter(idDeclarado,null);
-				System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
+				//System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
 			}else{
 				geracaoDeCodigo.adicionarInteiro(idDeclarado,null);
-				System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
+				//System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
 			}
 		}
 		while(this.simbolo.token == this.tabelasimbolos.VIRGULA){
@@ -267,10 +267,10 @@ public class AnalisadorSintatico{
 			}else{
 				if(idDeclarado.tipo == this.simbolo.Caracter_tipo) {
 					geracaoDeCodigo.adicionarCaracter(idDeclarado,null);
-					System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
+					//System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
 				}else{
 					geracaoDeCodigo.adicionarInteiro(idDeclarado,null);
-					System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
+					//System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
 				}
 			}
 		}
@@ -327,10 +327,10 @@ public class AnalisadorSintatico{
 				}
 				if(idDeclarado.tipo == this.simbolo.Caracter_tipo) {
 					geracaoDeCodigo.adicionarCaracter(idDeclarado,constanteDeclarada.lexema);
-					System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
+					//System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
 				}else{
 					geracaoDeCodigo.adicionarInteiro(idDeclarado,constanteDeclarada.lexema);
-					System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
+					//System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
 				}
 			}
 		}else if (this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
@@ -520,13 +520,13 @@ public class AnalisadorSintatico{
 			/*OLHA AQUI, comeco do FOR*/
 			geracaoDeCodigo.escreverComandos(";Inicio for");
 			geracaoDeCodigo.escreverComandos("mov ax, DS:[" + EXP.endereco + "]");
-            geracaoDeCodigo.escreverComandos("mov DS:[" + idDeclarado.endereco + "] , ax"  );
-            geracaoDeCodigo.escreverComandos(";Acabou atribuicao");
+      geracaoDeCodigo.escreverComandos("mov DS:[" + idDeclarado.endereco + "] , ax"  );
+      geracaoDeCodigo.escreverComandos(";Acabou atribuicao");
 
-            int RotuloInicio = geracaoDeCodigo.novoRotulo();
-            int RotuloFim = geracaoDeCodigo.novoRotulo();
+			int RotuloInicio = geracaoDeCodigo.novoRotulo();
+			int RotuloFim = geracaoDeCodigo.novoRotulo();
 
-            geracaoDeCodigo.escreverComandos("R" + String.valueOf(RotuloInicio) +":" );
+			geracaoDeCodigo.escreverComandos("R" + String.valueOf(RotuloInicio) +":" );
 
 
 			CasaToken(this.tabelasimbolos.TO);
@@ -539,9 +539,11 @@ public class AnalisadorSintatico{
 			}
 
 			geracaoDeCodigo.escreverComandos(";Inicio comparacao");
-			geracaoDeCodigo.escreverComandos("mov bx, DS:[" + EXP.endereco + "]");
-            geracaoDeCodigo.escreverComandos("cmp ax , bx");
-            geracaoDeCodigo.escreverComandos("jg R"+ String.valueOf(RotuloFim));
+			geracaoDeCodigo.escreverComandos("mov ax," + "DS:[" + idDeclarado.endereco + "]");
+			geracaoDeCodigo.escreverComandos("mov bx," + "DS:[" + EXP.endereco + "]");
+			//geracaoDeCodigo.escreverComandos("R" + String.valueOf(RotuloInicio) +":" );
+      geracaoDeCodigo.escreverComandos("cmp ax, bx");
+      geracaoDeCodigo.escreverComandos("jg R"+ String.valueOf(RotuloFim));
 
 			if(this.simbolo.token == this.tabelasimbolos.STEP){
 				CasaToken(this.tabelasimbolos.STEP);
@@ -569,9 +571,9 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.DO);
 			C();
 
-			geracaoDeCodigo.escreverComandos("add ax , cx");
+			geracaoDeCodigo.escreverComandos("add DS:[" + idDeclarado.endereco + "]"+ ", cx");
 			geracaoDeCodigo.escreverComandos("jmp R" + String.valueOf(RotuloInicio));
-            geracaoDeCodigo.escreverComandos("R" + String.valueOf(RotuloFim) + ":");
+      geracaoDeCodigo.escreverComandos("R" + String.valueOf(RotuloFim) + ":");
 
 		}else if(this.simbolo.token == this.tabelasimbolos.IF){
 			CasaToken(this.tabelasimbolos.IF);
@@ -639,6 +641,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.WRITE);
 			CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
 			EXP = Exp();
+			geracaoDeCodigo.imprimirString(EXP);
 			/*Acao semantica 22*/
 			if((EXP.tipo == simbolo.Inteiro_tipo && EXP.tamanho != 0) || EXP.tipo == simbolo.Logico_tipo) {
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");

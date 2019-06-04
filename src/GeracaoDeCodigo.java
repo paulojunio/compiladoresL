@@ -125,9 +125,9 @@ public class GeracaoDeCodigo {
 
     public void declararString(String lexema) {
         try{
-            arquivoAsm.append("dseg SEGMENT PUBLIC ; declarando string");
+            arquivoAsm.append("dseg SEGMENT PUBLIC ; declarando string\n");
             arquivoAsm.append("byte "+ "\"" + lexema + "\" ; string" + "\n");
-            arquivoAsm.append("dseg ENDS ; fim da string");
+            arquivoAsm.append("dseg ENDS ; fim da string\n");
         }catch(Exception e) {
             System.out.println("Erro ao escrever no arquivo asm.");
         }
@@ -140,6 +140,15 @@ public class GeracaoDeCodigo {
         }
     }
 
+    public void imprimirString (Simbolo simbolo) {
+        try{
+            arquivoAsm.append("mov dx, " + simbolo.endereco + "; comeco string\n");
+            arquivoAsm.append("mov ah, 09h\n");
+            arquivoAsm.append("int 21h\n");
+        }catch(Exception e) {
+            System.out.println("Erro ao escrever no arquivo asm.");
+        }
+    }
     public int novoTemp(int i){
         int novoTemp = contadorTemporarios;
         contadorTemporarios += i;
@@ -156,4 +165,11 @@ public class GeracaoDeCodigo {
         contadorTemporarios = 0;
     }
 
+    /*public void imprimirString (Simbolo simbolo) {
+        try{
+
+        }catch(Exception e) {
+            System.out.println("Erro ao escrever no arquivo asm.");
+        }
+    }*/
 }

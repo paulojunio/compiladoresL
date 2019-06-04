@@ -145,7 +145,7 @@ public class GeracaoDeCodigo {
             arquivoAsm.append("mov dx, " + endereco + "; comeco string\n");
             arquivoAsm.append("mov ah, 09h\n");
             arquivoAsm.append("int 21h\n");
-            contadorTemporarios = 0;
+            //contadorTemporarios = 0;
         }catch(Exception e) {
             System.out.println("Erro ao escrever no arquivo asm.");
         }
@@ -184,10 +184,10 @@ public class GeracaoDeCodigo {
             arquivoAsm.append("jne R" + rotulo3 + "\n");
             arquivoAsm.append("mov dl, 024h\n");
             arquivoAsm.append("mov DS:[di], dl\n");
-            arquivoAsm.append("mov dx, " + endereco + "\n");
+            arquivoAsm.append("mov dx, " + enderecoTemporario + "\n");
             arquivoAsm.append("mov ah, 09h\n");
             arquivoAsm.append("int 21h\n");
-            contadorTemporarios = 0;
+            //contadorTemporarios = 0;
         }catch(Exception e) {
             System.out.println("Erro ao escrever no arquivo asm.");
         }

@@ -404,6 +404,7 @@ public class AnalisadorSintatico{
 			if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
 				CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
 				EXP = Exp();
+				geracaoDeCodigo.contadorVariaveis = 0;
 				//System.out.println("Volto Exp1" + " Tipo: " + EXP.tipo + " Tamnho:" + EXP.tamanho + " lexema: " + EXP.lexema); PRINT DEBUG
 				//System.out.println("IdDeclarado" + idDeclarado.lexema); PRINT DEBUG
 				/*Acao semantica 13*/
@@ -414,13 +415,14 @@ public class AnalisadorSintatico{
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
 				}else{
-					possicaoVetor = Integer.parseInt(EXP.lexema);
+					possicaoVetor = EXP.endereco;
 					flag = true;
 				}
 				CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
 			}
 			CasaToken(this.tabelasimbolos.IGUAL);
 			EXP = Exp();
+			geracaoDeCodigo.contadorVariaveis = 0;
 			//System.out.println("Volto Exp2" + " Tipo: " + EXP.tipo + " Tamnho:" + EXP.tamanho + " lexema: " + EXP.lexema); PRINT DEBUG
 			
 			/*Acao semantica 14*/
@@ -450,7 +452,17 @@ public class AnalisadorSintatico{
 					geracaoDeCodigo.escreverComandos("mov ax, DS:[" + EXP.endereco + "]");
 					geracaoDeCodigo.escreverComandos("mov DS:[" + idDeclarado.endereco + "], ax");
 				}else if (idDeclarado.tipo == simbolo.Caracter_tipo && idDeclarado.tamanho != 0){
-					//Fazer for em Assembly
+					int rotulo1 = geracaoDeCodigo.novoRotulo();
+					geracaoDeCodigo.escreverComandos("mov di, " + idDeclarado.endereco);
+					geracaoDeCodigo.escreverComandos("mov si, " + EXP.endereco);
+					geracaoDeCodigo.escreverComandos("R" + rotulo1 + ":");
+					geracaoDeCodigo.escreverComandos("mov ax, DS:[si]");
+					geracaoDeCodigo.escreverComandos("mov ah, 0");
+					geracaoDeCodigo.escreverComandos("mov DS:[di], al");
+					geracaoDeCodigo.escreverComandos("add di, 1");
+					geracaoDeCodigo.escreverComandos("add si, 1");
+					geracaoDeCodigo.escreverComandos("cmp ax, 024h");
+					geracaoDeCodigo.escreverComandos("jne R" + rotulo1);
 				}
 
 			}else{
@@ -468,19 +480,24 @@ public class AnalisadorSintatico{
 				/*GIOVANNA AQUI, OLHAR AQUI*/
 				/*Acho que vai precisar de verificar se a posicao nao e' maior que o vetor, pq se nao vai entrar em outra posicao, tem que dar erro antes*/
 				/*Vetor entrou, entao deve guardar a posicao dele*/
-				if (possicaoVetor > idDeclarado.tamanho){
+				/*if (possicaoVetor > idDeclarado.tamanho){
 					System.out.println(this.analisadorlexico.linha + ":tamanho do vetor excede o maximo permitido.");
 					System.exit(0); 
-				}
+				}*/
 				
-				geracaoDeCodigo.escreverComandos("mov ax, " + possicaoVetor);
+				geracaoDeCodigo.escreverComandos("mov di, " + "DS:["+possicaoVetor + "] ; foi feito aqui");
+				System.out.println("Oi " + possicaoVetor);
 				if (idDeclarado.tipo == simbolo.Inteiro_tipo){ 
-					geracaoDeCodigo.escreverComandos("add ax, ax");
-					geracaoDeCodigo.escreverComandos("add ax, " + idDeclarado.endereco);
-					geracaoDeCodigo.escreverComandos("mov DS:[ax], DS:["+EXP.endereco+"]");
+					geracaoDeCodigo.escreverComandos("add di, di");
+					geracaoDeCodigo.escreverComandos("add di, " + idDeclarado.endereco);
+					geracaoDeCodigo.escreverComandos("mov ax," +  "DS:["+EXP.endereco+"]");
+					
+					geracaoDeCodigo.escreverComandos("mov DS:[di], ax; foi aqui tb");
 				}else if (idDeclarado.tipo == simbolo.Caracter_tipo){ 
-					geracaoDeCodigo.escreverComandos("add ax, " + idDeclarado.endereco);
-					geracaoDeCodigo.escreverComandos("mov DS:[ax], DS:["+EXP.endereco+"]");
+					geracaoDeCodigo.escreverComandos("add di, " + idDeclarado.endereco);
+					geracaoDeCodigo.escreverComandos("mov ax," +  "DS:["+EXP.endereco+"]");
+					System.out.println("Xau " + EXP.endereco + " Olha:" + idDeclarado.endereco);
+					geracaoDeCodigo.escreverComandos("mov DS:[di], ax");
 				}
 				//geracaoDeCodigo.escreverComandos();
             	//geracaoDeCodigo.escreverComandos("cmp ax , bx");
@@ -935,7 +952,7 @@ public class AnalisadorSintatico{
 						int rotulo2 = geracaoDeCodigo.novoRotulo();
 						int rotulo3 = geracaoDeCodigo.novoRotulo();
 						geracaoDeCodigo.escreverComandos("mov di," + EXP.endereco); // String 1
-						geracaoDeCodigo.escreverComandos("mov si," + EXPS.endereco); // String 2
+						geracaoDeCodigo.escreverComandos("mov si," + EXPS1.endereco); // String 2
 						geracaoDeCodigo.escreverComandos("mov ax, 1"); // Resposta true
 						geracaoDeCodigo.escreverComandos("R" + rotulo1 + ":");
 						geracaoDeCodigo.escreverComandos("mov bx, DS:[di]");
@@ -1370,7 +1387,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.PARENTESES_ABERTO);
 
 			Simbolo EXP = Exp();
-
+			geracaoDeCodigo.contadorVariaveis = 0;
 			/*Acao semantica 24*/
 			F.tipo = EXP.tipo;
 			F.tamanho = EXP.tamanho;
@@ -1399,6 +1416,7 @@ public class AnalisadorSintatico{
 			}else{
 				if(F.tipo == simbolo.Caracter_tipo) {
 					F.endereco = geracaoDeCodigo.novoTemp(1);
+					System.out.println(F.endereco + " aa ");
 					geracaoDeCodigo.escreverComandos("mov ax , " + F.lexema); 
 					geracaoDeCodigo.escreverComandos("mov DS:[" + F.endereco + "] " + ", ax");
 					//geracaoDeCodigo.contadorVariaveis += 1;
@@ -1435,6 +1453,7 @@ public class AnalisadorSintatico{
 				//passou2 = true;
 				/*Acao semantica 27*/
 				Simbolo EXP = Exp();
+				geracaoDeCodigo.contadorVariaveis = 0;
 				if(EXP.tipo != simbolo.Inteiro_tipo) {
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				  System.exit(0);
@@ -1444,18 +1463,20 @@ public class AnalisadorSintatico{
 				}else{
 					F.tamanho = 0;
 					/*Geracao de codigo*/
-					if(idDeclarado.tipo == this.simbolo.Caracter_tipo) {
+					if(idDeclarado.tipo == this.simbolo.Inteiro_tipo) {
 						geracaoDeCodigo.escreverComandos("mov di , " + "DS:[" + EXP.endereco + "]");
 						geracaoDeCodigo.escreverComandos("add di , di");
 						geracaoDeCodigo.escreverComandos("add di , " + idDeclarado.endereco);
 						geracaoDeCodigo.escreverComandos("mov ax , DS:[di]");
-						F.endereco = geracaoDeCodigo.novoTemp(1); 
+						F.endereco = geracaoDeCodigo.novoTemp(2); 
+						System.out.println("F.endereco " + F.endereco + " Exp.enreco" + EXP.endereco + " idDE: " + idDeclarado.endereco);
 						geracaoDeCodigo.escreverComandos("mov " + "DS:[" + F.endereco + "]" + " , ax");
-					}else if(idDeclarado.tipo == this.simbolo.Inteiro_tipo){
+					}else if(idDeclarado.tipo == this.simbolo.Caracter_tipo){
 						geracaoDeCodigo.escreverComandos("mov di , " + "DS:[" + EXP.endereco + "]");
 						geracaoDeCodigo.escreverComandos("add di , " + idDeclarado.endereco);
 						geracaoDeCodigo.escreverComandos("mov ax , DS:[di]");
-						F.endereco = geracaoDeCodigo.novoTemp(2);
+						F.endereco = geracaoDeCodigo.novoTemp(1);
+						System.out.println(" Aqui F.endereco " + F.endereco + " Exp.enreco" + EXP.endereco + " idDE: " + idDeclarado.endereco);
 						geracaoDeCodigo.escreverComandos("mov " + "DS:[" + F.endereco + "]" + " , ax");
 					}
 				}

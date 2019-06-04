@@ -1100,10 +1100,7 @@ public class AnalisadorSintatico{
 			/*Geracao codigo*/
 			F.endereco = EXP.endereco;
 
-			/*OLHAR AQUI, constante so pode ser inteiro*/
-			F.endereco = geracaoDeCodigo.novoTemp(2); 
-			geracaoDeCodigo.escreverComandos("mov ax, " + EXP.lexema);
-			geracaoDeCodigo.escreverComandos("mov DS:[" + F.endereco + "] " + ", ax");
+			
 
 			CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
 		}else if(this.simbolo.token == this.tabelasimbolos.constante){
@@ -1186,18 +1183,7 @@ public class AnalisadorSintatico{
 						geracaoDeCodigo.escreverComandos("mov " + "DS:[" + F.endereco + "]" + " , ax");
 					}
 				}
-				/*OLHAR AQUI*/
-				if(!(passou2)){
-					if(idDeclarado.tipo == this.simbolo.Caracter_tipo) {
-						F.endereco = geracaoDeCodigo.novoTemp(1);
-						geracaoDeCodigo.escreverComandos("mov ax , " + idDeclarado.lexema); 
-						geracaoDeCodigo.escreverComandos("mov DS:[" + F.endereco + "] " + ", ax");
-					}else if(idDeclarado.tipo == this.simbolo.Inteiro_tipo){
-						F.endereco = geracaoDeCodigo.novoTemp(1);
-						geracaoDeCodigo.escreverComandos("mov ax , " + idDeclarado.lexema); 
-						geracaoDeCodigo.escreverComandos("mov DS:[" + F.endereco + "] " + ", ax");
-					}
-				}
+				
 
 				CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
 			}

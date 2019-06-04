@@ -1,6 +1,20 @@
 
-Var integer a;
+Var integer a = 65;
+Var char b = 'b';
 
-for a = 1 to 5 do { 
-    write("Oi");
+if 2 = 2 then  {
+
+    writeln("oi");
+
+}
+
+if 2 <> 3 then {
+
+    writeln("Passo aqui1");
+}
+
+if 3 < 2 then {
+    writeln("Passo aqui3");
+} else {
+    writeln("Passo aqui2");
 }

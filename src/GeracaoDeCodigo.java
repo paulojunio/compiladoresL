@@ -140,11 +140,91 @@ public class GeracaoDeCodigo {
         }
     }
 
-    public void imprimirString (Simbolo simbolo) {
+    public void imprimirString (int endereco) {
         try{
-            arquivoAsm.append("mov dx, " + simbolo.endereco + "; comeco string\n");
+            arquivoAsm.append("mov dx, " + endereco + "; comeco string\n");
             arquivoAsm.append("mov ah, 09h\n");
             arquivoAsm.append("int 21h\n");
+            contadorTemporarios = 0;
+        }catch(Exception e) {
+            System.out.println("Erro ao escrever no arquivo asm.");
+        }
+    }
+    public void imprimirInteiro(int endereco) {
+        try{
+            int enderecoTemporario = novoTemp(3);
+            int rotulo1 = novoRotulo();
+            int rotulo2 = novoRotulo();
+            int rotulo3 = novoRotulo();
+            arquivoAsm.append("mov di, " + enderecoTemporario + "\n");
+            arquivoAsm.append("mov cx, 0\n");
+            arquivoAsm.append("mov ax, DS:[" + endereco + "]\n");
+            arquivoAsm.append("cmp ax, 0\n");
+            arquivoAsm.append("jge R" + rotulo1 + "\n");
+            arquivoAsm.append("mov bl, 2Dh\n");
+            arquivoAsm.append("mov DS:[di], bl\n");
+            arquivoAsm.append("add di , 1\n");
+            arquivoAsm.append("neg ax\n");
+            arquivoAsm.append("R" + rotulo1 + ":\n");
+            arquivoAsm.append("mov bx, 10\n");
+            arquivoAsm.append("R" + rotulo2 + ":\n");
+            arquivoAsm.append("add cx, 1\n");
+            arquivoAsm.append("mov dx, 0\n");
+            arquivoAsm.append("idiv bx\n");
+            arquivoAsm.append("push dx\n");
+            arquivoAsm.append("cmp ax, 0\n");
+            arquivoAsm.append("jne R" + rotulo2 + "\n");
+            arquivoAsm.append("R" + rotulo3 + ":\n");
+            arquivoAsm.append("pop dx\n");
+            arquivoAsm.append("add dx, 30h\n");
+            arquivoAsm.append("mov DS:[di] , dl\n");
+            arquivoAsm.append("add di, 1\n");
+            arquivoAsm.append("add cx, -1\n");
+            arquivoAsm.append("cmp cx, 0\n");
+            arquivoAsm.append("jne R" + rotulo3 + "\n");
+            arquivoAsm.append("mov dl, 024h\n");
+            arquivoAsm.append("mov DS:[di], dl\n");
+            arquivoAsm.append("mov dx, " + endereco + "\n");
+            arquivoAsm.append("mov ah, 09h\n");
+            arquivoAsm.append("int 21h\n");
+            contadorTemporarios = 0;
+        }catch(Exception e) {
+            System.out.println("Erro ao escrever no arquivo asm.");
+        }
+    }
+
+    public void barraN() {
+        try{
+            arquivoAsm.append("mov ah, 02h\n");
+            arquivoAsm.append("mov dl, 0Dh\n");
+            arquivoAsm.append("int 21h\n");
+            arquivoAsm.append("mov DL, 0Ah\n");
+            arquivoAsm.append("int 21h\n");
+        }catch(Exception e) {
+            System.out.println("Erro ao escrever no arquivo asm.");
+        }
+    }
+    public void imprimirChar (int endereco) {
+        try{
+            int enderecoTemporario = novoTemp(2); //Caracter + $
+            arquivoAsm.append("mov di, " + "DS:[" + endereco + "]\n");
+            arquivoAsm.append("mov DS:[" + enderecoTemporario + "], " + "di\n");
+            arquivoAsm.append("mov di, 024h\n");
+            arquivoAsm.append("mov DS:[" + (enderecoTemporario + 1) + "], " + "di\n");
+            imprimirString(enderecoTemporario);
+        }catch(Exception e) {
+            System.out.println("Erro ao escrever no arquivo asm.");
+        }
+    }
+    public void imprimirVetorChar (int endereco,int tamanho) {
+        try{
+            //Copiar string para o temporario TODO
+            int enderecoTemporario = novoTemp(tamanho + 1); //Vetor Caracter + $
+            arquivoAsm.append("mov di, " + "DS:[" + endereco + "]\n");
+            arquivoAsm.append("mov DS:[" + enderecoTemporario + "], " + "di\n");
+            arquivoAsm.append("mov di, 024h\n");
+            arquivoAsm.append("mov DS:[" + (enderecoTemporario + 1 + tamanho) + "], " + "di\n");
+            imprimirString(enderecoTemporario);
         }catch(Exception e) {
             System.out.println("Erro ao escrever no arquivo asm.");
         }

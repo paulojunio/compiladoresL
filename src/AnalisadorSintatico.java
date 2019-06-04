@@ -1100,6 +1100,11 @@ public class AnalisadorSintatico{
 			/*Geracao codigo*/
 			F.endereco = EXP.endereco;
 
+			/*OLHAR AQUI, constante so pode ser inteiro*/
+			F.endereco = geracaoDeCodigo.novoTemp(2); 
+			geracaoDeCodigo.escreverComandos("mov ax, " + EXP.lexema);
+			geracaoDeCodigo.escreverComandos("mov DS:[" + F.endereco + "] " + ", ax");
+
 			CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
 		}else if(this.simbolo.token == this.tabelasimbolos.constante){
 
@@ -1135,7 +1140,7 @@ public class AnalisadorSintatico{
 		}else if(this.simbolo.token == this.tabelasimbolos.identificador){
 			
 			//acoesSemanticas.verificarID(simbolo,(byte)0);
-			
+			boolean passou2 = false;
 
 			Simbolo idDeclarado = simbolo;
 			CasaToken(this.tabelasimbolos.identificador);
@@ -1154,7 +1159,7 @@ public class AnalisadorSintatico{
 
 			if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
 				CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
-
+				passou2 = true;
 				/*Acao semantica 27*/
 				Simbolo EXP = Exp();
 				if(EXP.tipo != simbolo.Inteiro_tipo) {
@@ -1171,7 +1176,7 @@ public class AnalisadorSintatico{
 						geracaoDeCodigo.escreverComandos("add di , di");
 						geracaoDeCodigo.escreverComandos("add di , " + idDeclarado.endereco);
 						geracaoDeCodigo.escreverComandos("mov ax , DS:[di]");
-						F.endereco = geracaoDeCodigo.novoTemp(2);
+						F.endereco = geracaoDeCodigo.novoTemp(2); //ESTA AO CONTRARIO, NAO
 						geracaoDeCodigo.escreverComandos("mov " + "DS:[" + F.endereco + "]" + " , ax");
 					}else if(idDeclarado.tipo == this.simbolo.Inteiro_tipo){
 						geracaoDeCodigo.escreverComandos("mov di , " + "DS:[" + EXP.endereco + "]");
@@ -1179,6 +1184,18 @@ public class AnalisadorSintatico{
 						geracaoDeCodigo.escreverComandos("mov ax , DS:[di]");
 						F.endereco = geracaoDeCodigo.novoTemp(1);
 						geracaoDeCodigo.escreverComandos("mov " + "DS:[" + F.endereco + "]" + " , ax");
+					}
+				}
+				/*OLHAR AQUI*/
+				if(!(passou2)){
+					if(idDeclarado.tipo == this.simbolo.Caracter_tipo) {
+						F.endereco = geracaoDeCodigo.novoTemp(1);
+						geracaoDeCodigo.escreverComandos("mov ax , " + idDeclarado.lexema); 
+						geracaoDeCodigo.escreverComandos("mov DS:[" + F.endereco + "] " + ", ax");
+					}else if(idDeclarado.tipo == this.simbolo.Inteiro_tipo){
+						F.endereco = geracaoDeCodigo.novoTemp(1);
+						geracaoDeCodigo.escreverComandos("mov ax , " + idDeclarado.lexema); 
+						geracaoDeCodigo.escreverComandos("mov DS:[" + F.endereco + "] " + ", ax");
 					}
 				}
 

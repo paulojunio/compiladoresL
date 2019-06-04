@@ -399,7 +399,7 @@ public class AnalisadorSintatico{
 			}else{
 				flag = false;
 			}
-			
+
 
 			if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
 				CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
@@ -442,6 +442,17 @@ public class AnalisadorSintatico{
 						System.exit(0);
 					}
 				}
+
+				if (idDeclarado.tipo == simbolo.Inteiro_tipo){ 
+					geracaoDeCodigo.escreverComandos("mov ax, DS:[" + EXP.endereco + "]");
+					geracaoDeCodigo.escreverComandos("mov DS:[" + idDeclarado.endereco + "], ax");
+				}else if (idDeclarado.tipo == simbolo.Caracter_tipo && idDeclarado.tamanho == 0){ 
+					geracaoDeCodigo.escreverComandos("mov ax, DS:[" + EXP.endereco + "]");
+					geracaoDeCodigo.escreverComandos("mov DS:[" + idDeclarado.endereco + "], ax");
+				}else if (idDeclarado.tipo == simbolo.Caracter_tipo && idDeclarado.tamanho != 0){
+					//Fazer for em Assembly
+				}
+
 			}else{
 				if(EXP.tipo != idDeclarado.tipo ) {
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
@@ -453,6 +464,28 @@ public class AnalisadorSintatico{
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
 				}
+				
+				/*GIOVANNA AQUI, OLHAR AQUI*/
+				/*Acho que vai precisar de verificar se a posicao nao e' maior que o vetor, pq se nao vai entrar em outra posicao, tem que dar erro antes*/
+				/*Vetor entrou, entao deve guardar a posicao dele*/
+				if (possicaoVetor > idDeclarado.tamanho){
+					System.out.println(this.analisadorlexico.linha + ":tamanho do vetor excede o maximo permitido.");
+					System.exit(0); 
+				}
+				
+				geracaoDeCodigo.escreverComandos("mov ax, " + possicaoVetor);
+				if (idDeclarado.tipo == simbolo.Inteiro_tipo){ 
+					geracaoDeCodigo.escreverComandos("add ax, ax");
+					geracaoDeCodigo.escreverComandos("add ax, " + idDeclarado.endereco);
+					geracaoDeCodigo.escreverComandos("mov DS:[ax], DS:["+EXP.endereco+"]");
+				}else if (idDeclarado.tipo == simbolo.Caracter_tipo){ 
+					geracaoDeCodigo.escreverComandos("add ax, " + idDeclarado.endereco);
+					geracaoDeCodigo.escreverComandos("mov DS:[ax], DS:["+EXP.endereco+"]");
+				}
+				//geracaoDeCodigo.escreverComandos();
+            	//geracaoDeCodigo.escreverComandos("cmp ax , bx");
+            	//geracaoDeCodigo.escreverComandos("jg R"+ String.valueOf(RotuloFim));
+
 			}
 			CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
 

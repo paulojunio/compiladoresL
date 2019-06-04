@@ -399,6 +399,7 @@ public class AnalisadorSintatico{
 			}else{
 				flag = false;
 			}
+			
 
 			if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
 				CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);

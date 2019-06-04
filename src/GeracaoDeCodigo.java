@@ -30,7 +30,7 @@ public class GeracaoDeCodigo {
     GeracaoDeCodigo(String nomeArquivoAsm) {
         try {
             contadorVariaveis = 0x4000;
-            contadorRotulos = 0;
+            contadorRotulos = 1;
             contadorTemporarios = 0;
             this.arquivoAsm = new BufferedWriter(new FileWriter(nomeArquivoAsm));
         }catch(Exception e){
@@ -143,6 +143,12 @@ public class GeracaoDeCodigo {
     public int novoTemp(int i){
         int novoTemp = contadorTemporarios;
         contadorTemporarios += i;
+        return novoTemp;
+    }
+
+    public int novoRotulo(){
+        int novoTemp = contadorRotulos;
+        contadorRotulos += 1;
         return novoTemp;
     }
 

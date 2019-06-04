@@ -236,6 +236,14 @@ public class AnalisadorSintatico{
 		if (this.simbolo.token == this.tabelasimbolos.IGUAL || this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
 			/*Acao semantica 8*/
 			E(idDeclarado);
+		}else{
+			if(idDeclarado.tipo == this.simbolo.Caracter_tipo) {
+				geracaoDeCodigo.adicionarCaracter(idDeclarado,null);
+				System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
+			}else{
+				geracaoDeCodigo.adicionarInteiro(idDeclarado,null);
+				System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
+			}
 		}
 		while(this.simbolo.token == this.tabelasimbolos.VIRGULA){
 			CasaToken(this.tabelasimbolos.VIRGULA);
@@ -256,6 +264,14 @@ public class AnalisadorSintatico{
 			if (this.simbolo.token == this.tabelasimbolos.IGUAL || this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
 				/*Acao semantica 8.1*/
 				E(idDeclarado);
+			}else{
+				if(idDeclarado.tipo == this.simbolo.Caracter_tipo) {
+					geracaoDeCodigo.adicionarCaracter(idDeclarado,null);
+					System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
+				}else{
+					geracaoDeCodigo.adicionarInteiro(idDeclarado,null);
+					System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
+				}
 			}
 		}
 		CasaToken(this.tabelasimbolos.PONTO_VIRGULA);
@@ -267,9 +283,10 @@ public class AnalisadorSintatico{
 	*/
 	public void E(Simbolo idDeclarado){
 		//System.out.println("Estamos no E");
+		//boolean passou = false;
 		boolean negativo = false;
 		if (this.simbolo.token == this.tabelasimbolos.IGUAL){
-
+			//passou = true;
 			CasaToken(this.tabelasimbolos.IGUAL);
 
 			if(this.simbolo.token == this.tabelasimbolos.MENOS){
@@ -336,7 +353,7 @@ public class AnalisadorSintatico{
 			}else{
 				idDeclarado.tamanho = Integer.parseInt(constanteDeclarada.lexema);
 				geracaoDeCodigo.adicionarVetor(idDeclarado);
-				System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
+				//System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
 			}
 
 			CasaToken(this.tabelasimbolos.COLCHETE_FECHADO);
@@ -444,7 +461,7 @@ public class AnalisadorSintatico{
 			Simbolo idDeclarado = simbolo;
 
 			CasaToken(this.tabelasimbolos.identificador);
-
+			//System.out.println("Entrou");
 			/*Acao semantica 16*/
 			if(idDeclarado.classe == simbolo.Nenhuma_classe) {
 				System.out.println(analisadorlexico.linha +":identificador nao declarado " + '[' + idDeclarado.lexema + "].");
@@ -459,19 +476,39 @@ public class AnalisadorSintatico{
 
 			CasaToken(this.tabelasimbolos.IGUAL);
 			EXP = Exp();
+			geracaoDeCodigo.contadorTemporarios = 0;
 			/*Acao semantica 17*/
 			if(EXP.tipo != simbolo.Inteiro_tipo || EXP.tamanho != 0) {
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}
 
+			/*OLHA AQUI, comeco do FOR*/
+			geracaoDeCodigo.escreverComandos(";Inicio for");
+			geracaoDeCodigo.escreverComandos("mov ax, DS:[" + EXP.endereco + "]");
+            geracaoDeCodigo.escreverComandos("mov DS:[" + idDeclarado.endereco + "] , ax"  );
+            geracaoDeCodigo.escreverComandos(";Acabou atribuicao");
+
+            int RotuloInicio = geracaoDeCodigo.novoRotulo();
+            int RotuloFim = geracaoDeCodigo.novoRotulo();
+
+            geracaoDeCodigo.escreverComandos("R" + String.valueOf(RotuloInicio) +":" );
+
+
 			CasaToken(this.tabelasimbolos.TO);
 			EXP = Exp();
+			geracaoDeCodigo.contadorTemporarios = 0;
 			/*Acao semantica 17*/
 			if(EXP.tipo != simbolo.Inteiro_tipo || EXP.tamanho != 0) {
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}
+
+			geracaoDeCodigo.escreverComandos(";Inicio comparacao");
+			geracaoDeCodigo.escreverComandos("mov bx, DS:[" + EXP.endereco + "]");
+            geracaoDeCodigo.escreverComandos("cmp ax , bx");
+            geracaoDeCodigo.escreverComandos("jg R"+ String.valueOf(RotuloFim));
+
 			if(this.simbolo.token == this.tabelasimbolos.STEP){
 				CasaToken(this.tabelasimbolos.STEP);
 
@@ -484,28 +521,57 @@ public class AnalisadorSintatico{
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				  System.exit(0);
 				}
+				/*Olhar qual endereco desse cara*/
+				//geracaoDeCodigo.escreverComandos();
+				geracaoDeCodigo.escreverComandos("mov cx, " + constanteDeclarada.lexema);
 
+			}else{
+				geracaoDeCodigo.escreverComandos("mov cx, 1");
 			}
+
+			/*geracaoDeCodigo.escreverComandos("R " + RotuloInicio + ":");*/
+			
+            
 			CasaToken(this.tabelasimbolos.DO);
 			C();
 
+			geracaoDeCodigo.escreverComandos("add ax , cx");
+			geracaoDeCodigo.escreverComandos("jmp R" + String.valueOf(RotuloInicio));
+            geracaoDeCodigo.escreverComandos("R" + String.valueOf(RotuloFim) + ":");
+
 		}else if(this.simbolo.token == this.tabelasimbolos.IF){
 			CasaToken(this.tabelasimbolos.IF);
+			int RotuloElse = geracaoDeCodigo.novoRotulo();
+			int RotuloFim = geracaoDeCodigo.novoRotulo();
 			EXP = Exp();
+			geracaoDeCodigo.contadorTemporarios = 0;
 			/*Acao semantica 20*/
 			if(EXP.tipo != simbolo.Logico_tipo) {
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}
+
+			geracaoDeCodigo.escreverComandos("mov ax, DS["+ EXP.endereco +"]" + "; comeco if");
+            geracaoDeCodigo.escreverComandos("cmp ax, 1");
+            geracaoDeCodigo.escreverComandos("jne R" + String.valueOf(RotuloElse) + "; jne if");
+
 			CasaToken(this.tabelasimbolos.THEN);
 			//System.out.println("Voltou aqui");
 			C();
 			
 			if (this.simbolo.token == this.tabelasimbolos.ELSE){
 				CasaToken(this.tabelasimbolos.ELSE);
+				
+				geracaoDeCodigo.escreverComandos("jmp R" + String.valueOf(RotuloFim));
+                geracaoDeCodigo.escreverComandos("R" + String.valueOf(RotuloElse) + ":");
+
 				C();
+
+			}else{
+				geracaoDeCodigo.escreverComandos("R" + String.valueOf(RotuloElse) + ":");
 			}
 
+			geracaoDeCodigo.escreverComandos("R" + String.valueOf(RotuloFim) + ":");
 
 		}else if(this.simbolo.token == this.tabelasimbolos.READLN){
 			CasaToken(this.tabelasimbolos.READLN);
@@ -667,7 +733,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.DIFERENTE);
 			
 			/*Acao semantica 43*/
-			if((EXP.tipo != simbolo.Inteiro_tipo) || (EXP.tamanho != 0)){
+			if((EXP.tipo == simbolo.Logico_tipo) || (EXP.tamanho != 0)){
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}else{
@@ -682,7 +748,7 @@ public class AnalisadorSintatico{
 			//System.out.println("EXPS1_tipo" + EXPS1.tipo + " ");
 			//System.out.println("EXPS1_tamanho" + EXPS1.tamanho + " ");
 			/*Acao semantica 45*/
-			if((EXP.tipo != simbolo.Inteiro_tipo) || (EXP.tamanho != 0)){
+			if((EXP.tipo == simbolo.Logico_tipo) || (EXP.tamanho != 0)){
 
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
@@ -695,7 +761,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.MENOR);
 
 			/*Acao semantica 44*/
-			if((EXP.tipo != simbolo.Inteiro_tipo) || (EXP.tamanho != 0)){
+			if((EXP.tipo == simbolo.Logico_tipo) || (EXP.tamanho != 0)){
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}else{
@@ -708,7 +774,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.MENOR_IGUAL);
 
 			/*Acao semantica 46*/
-			if((EXP.tipo != simbolo.Inteiro_tipo) || (EXP.tamanho != 0)){
+			if((EXP.tipo == simbolo.Logico_tipo) || (EXP.tamanho != 0)){
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}else{
@@ -721,7 +787,7 @@ public class AnalisadorSintatico{
 			CasaToken(this.tabelasimbolos.MAIOR_IGUAL);
 
 			/*Acao semantica 47*/
-			if((EXP.tipo != simbolo.Inteiro_tipo) || (EXP.tamanho != 0)){
+			if((EXP.tipo == simbolo.Logico_tipo) || (EXP.tamanho != 0)){
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 				System.exit(0);
 			}else{
@@ -733,6 +799,7 @@ public class AnalisadorSintatico{
 		//EXPS1 = ExpS();
 		//System.out.println("CHEGOU ATE AQUI");
 		//System.out.println("Tipo final EXPS1 " + EXPS1.tipo); PRINT DEBUG
+		//System.out.println("Passo aqui");
 		if (passou){
 			if((EXPS1.tipo == simbolo.Inteiro_tipo) && (EXPS1.tamanho != 0)){
 				System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
@@ -753,7 +820,7 @@ public class AnalisadorSintatico{
 				}
 			}else if( !operador.equals("igual") ){
 				//System.out.println(" AQI+UI" + EXPS1.tipo);
-				if(EXPS1.tipo != simbolo.Inteiro_tipo){
+				if(EXPS1.tipo == simbolo.Logico_tipo || EXPS1.tamanho != 0){
 					//System.out.println("Tipo final" +EXPS1.tipo);
 					System.out.println(this.analisadorlexico.linha + ":tipos incompativeis");
 					System.exit(0);
@@ -1100,8 +1167,6 @@ public class AnalisadorSintatico{
 			/*Geracao codigo*/
 			F.endereco = EXP.endereco;
 
-			
-
 			CasaToken(this.tabelasimbolos.PARENTESES_FECHADO);
 		}else if(this.simbolo.token == this.tabelasimbolos.constante){
 
@@ -1125,19 +1190,19 @@ public class AnalisadorSintatico{
 					F.endereco = geracaoDeCodigo.novoTemp(1);
 					geracaoDeCodigo.escreverComandos("mov ax , " + F.lexema); 
 					geracaoDeCodigo.escreverComandos("mov DS:[" + F.endereco + "] " + ", ax");
-					geracaoDeCodigo.contadorVariaveis += 1;
+					//geracaoDeCodigo.contadorVariaveis += 1;
 				}else if(F.tipo == simbolo.Inteiro_tipo){
 					F.endereco = geracaoDeCodigo.novoTemp(2);
 					geracaoDeCodigo.escreverComandos("mov ax , " + F.lexema); 
 					geracaoDeCodigo.escreverComandos("mov DS:[" + F.endereco + "] " + ", ax");
-					geracaoDeCodigo.contadorVariaveis += 2;
+					//geracaoDeCodigo.contadorVariaveis += 2;
 				}
 			}
 
 		}else if(this.simbolo.token == this.tabelasimbolos.identificador){
 			
 			//acoesSemanticas.verificarID(simbolo,(byte)0);
-			boolean passou2 = false;
+			//boolean passou2 = false;
 
 			Simbolo idDeclarado = simbolo;
 			CasaToken(this.tabelasimbolos.identificador);
@@ -1156,7 +1221,7 @@ public class AnalisadorSintatico{
 
 			if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
 				CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
-				passou2 = true;
+				//passou2 = true;
 				/*Acao semantica 27*/
 				Simbolo EXP = Exp();
 				if(EXP.tipo != simbolo.Inteiro_tipo) {
@@ -1173,13 +1238,13 @@ public class AnalisadorSintatico{
 						geracaoDeCodigo.escreverComandos("add di , di");
 						geracaoDeCodigo.escreverComandos("add di , " + idDeclarado.endereco);
 						geracaoDeCodigo.escreverComandos("mov ax , DS:[di]");
-						F.endereco = geracaoDeCodigo.novoTemp(2); //ESTA AO CONTRARIO, NAO
+						F.endereco = geracaoDeCodigo.novoTemp(1); 
 						geracaoDeCodigo.escreverComandos("mov " + "DS:[" + F.endereco + "]" + " , ax");
 					}else if(idDeclarado.tipo == this.simbolo.Inteiro_tipo){
 						geracaoDeCodigo.escreverComandos("mov di , " + "DS:[" + EXP.endereco + "]");
 						geracaoDeCodigo.escreverComandos("add di , " + idDeclarado.endereco);
 						geracaoDeCodigo.escreverComandos("mov ax , DS:[di]");
-						F.endereco = geracaoDeCodigo.novoTemp(1);
+						F.endereco = geracaoDeCodigo.novoTemp(2);
 						geracaoDeCodigo.escreverComandos("mov " + "DS:[" + F.endereco + "]" + " , ax");
 					}
 				}

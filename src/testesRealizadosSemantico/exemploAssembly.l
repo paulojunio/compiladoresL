@@ -15,7 +15,7 @@ for a = 0 to 4 do {
     vetor[a] = 1;
 }
 
-writeln(vetor[0] );
+writeln(vetor[0]);
 writeln(vetor[1]);
 writeln(vetor[2]);
 writeln(vetor[3]);

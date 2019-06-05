@@ -174,10 +174,10 @@ public class AnalisadorSintatico{
 				idDeclarado.tipo = constanteDeclarada.tipo;
 				if(idDeclarado.tipo == this.simbolo.Caracter_tipo) {
 					geracaoDeCodigo.adicionarCaracter(idDeclarado, constanteDeclarada.lexema);
-					System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
+					//System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
 				}else{
 					geracaoDeCodigo.adicionarInteiro(idDeclarado, constanteDeclarada.lexema);
-					System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
+					//System.out.println("Simbolo: " + idDeclarado.lexema + " endereco: " + idDeclarado.endereco);
 				}
 			}
 
@@ -217,6 +217,14 @@ public class AnalisadorSintatico{
 			/*Acao semantica 6*/
 			tipoDoId = 2;
 			//Tipo do id e caracter
+		}else{
+			if(analisadorlexico.fimDeArquivo){
+				System.out.println(analisadorlexico.linha + " : fim de arquivo nao esperado");
+				System.exit(0);
+			}else{
+				System.out.println(analisadorlexico.linha + " : token nao esperado [ " + this.simbolo.lexema + " ]");
+				System.exit(0);
+			}
 		}
 		//System.out.println(" " + this.simbolo.lexema);
 		
@@ -646,6 +654,13 @@ public class AnalisadorSintatico{
 				System.exit(0);
 			}
 
+			if(idDeclarado.tipo == simbolo.Inteiro_tipo) {
+				geracaoDeCodigo.lerInteiro(idDeclarado.endereco);
+			}else if(idDeclarado.tipo == simbolo.Caracter_tipo && idDeclarado.tamanho == 0){
+				geracaoDeCodigo.lerString(idDeclarado.endereco,1);
+			}else{
+				geracaoDeCodigo.lerString(idDeclarado.endereco,idDeclarado.tamanho);
+			}
 			//if(this.simbolo.token == this.tabelasimbolos.COLCHETE_ABERTO){
 			//	CasaToken(this.tabelasimbolos.COLCHETE_ABERTO);
 			//	Exp();

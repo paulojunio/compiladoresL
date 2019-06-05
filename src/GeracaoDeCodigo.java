@@ -192,7 +192,84 @@ public class GeracaoDeCodigo {
             System.out.println("Erro ao escrever no arquivo asm.");
         }
     }
+    public void lerInteiro(int endereco) {
+        int enderecoTemporario = novoTemp(254);
+        int rotulo1 = novoRotulo();
+        int rotulo2 = novoRotulo();
+        int rotulo3 = novoRotulo();
+        
+        try{
+            arquivoAsm.append("mov dx, " + enderecoTemporario + "\n");
+            arquivoAsm.append("mov al, 0FFh\n");
+            arquivoAsm.append("mov DS:[" + enderecoTemporario + "], al\n");
+            arquivoAsm.append("mov ah, 0Ah\n");
+            arquivoAsm.append("int 21h\n");
 
+            barraN();
+
+            arquivoAsm.append("mov di, " + (enderecoTemporario+2) + "\n");
+            arquivoAsm.append("mov ax, 0\n");
+            arquivoAsm.append("mov cx, 10\n");
+            arquivoAsm.append("mov dx, 1\n");
+            arquivoAsm.append("mov bh, 0\n");
+            arquivoAsm.append("mov bl, DS:[di]\n");
+            arquivoAsm.append("cmp bx, 2Dh\n");
+            arquivoAsm.append("jne R"+ rotulo1 + "\n");
+            arquivoAsm.append("mov dx, -1\n");
+            arquivoAsm.append("add di, 1\n");
+            arquivoAsm.append("mov bl, DS:[di]\n");
+            arquivoAsm.append("R"+ rotulo1 + ":\n");
+            arquivoAsm.append("push dx\n");
+            arquivoAsm.append("mov dx, 0\n");
+            arquivoAsm.append("R"+ rotulo2 + ":\n");
+            arquivoAsm.append("cmp bx, 0Dh\n");
+            arquivoAsm.append("je R" + rotulo3 + "\n");
+            arquivoAsm.append("imul cx\n");
+            arquivoAsm.append("add bx, -48\n");
+            arquivoAsm.append("add ax, bx\n");
+            arquivoAsm.append("add di, 1\n");
+            arquivoAsm.append("mov bh, 0\n");
+            arquivoAsm.append("mov bl, DS:[di]\n");
+            arquivoAsm.append("jmp R"+ rotulo2 + "\n");
+            arquivoAsm.append("R"+ rotulo3 + ":\n");
+            arquivoAsm.append("pop cx\n");
+            arquivoAsm.append("imul cx\n");
+            arquivoAsm.append("mov DS:["+ endereco + "], ax\n");
+        }catch(Exception e) {
+            System.out.println("Erro no asm");
+        }
+    }
+    public void lerString(int endereco, int tamanho) {
+        int enderecoTemporario = novoTemp(tamanho + 3); // n+3
+        int rotulo1 = novoRotulo();
+        int rotulo2 = novoRotulo();
+        
+        try{
+            arquivoAsm.append("mov dx, " + enderecoTemporario + "\n");
+            arquivoAsm.append("mov al, " + (tamanho + 1) + "\n");
+            arquivoAsm.append("mov DS:[" + enderecoTemporario + "], al\n");
+            arquivoAsm.append("mov ah, 0Ah\n");
+            arquivoAsm.append("int 21h\n");
+
+            barraN();
+
+            arquivoAsm.append("mov di, " + (enderecoTemporario+2) + "\n"); //posicao do buffer de string
+            arquivoAsm.append("mov si, " + endereco + "\n"); //Posicao do vetor/char
+            arquivoAsm.append("R" + rotulo1 + ":\n");
+            arquivoAsm.append("mov al, DS:[di]\n");
+            arquivoAsm.append("cmp al, 0Dh\n");
+            arquivoAsm.append("je R" + rotulo2 + "\n");
+            arquivoAsm.append("mov DS:[si], al\n"); //Pegar caracter para o vetor
+            arquivoAsm.append("add di, 1\n"); //Proxima posicao
+            arquivoAsm.append("add si, 1\n"); //Proxima posicao
+            arquivoAsm.append("jmp R" + rotulo1 + "\n");
+            arquivoAsm.append("R" + rotulo2 + ":\n");
+            arquivoAsm.append("mov al, 024h\n");
+            arquivoAsm.append("mov DS:[si], al\n");//Guarda a ultima $
+        }catch(Exception e) {
+            System.out.println("Erro no asm");
+        }
+    }
     public void barraN() {
         try{
             arquivoAsm.append("mov ah, 02h\n");

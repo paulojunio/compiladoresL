@@ -1393,7 +1393,7 @@ public class AnalisadorSintatico{
 			}else{
 				if(F.tipo == simbolo.Caracter_tipo) {
 					F.endereco = geracaoDeCodigo.novoTemp(1);
-					System.out.println(F.endereco + " aa ");
+					//System.out.println(F.endereco + " aa ");
 					geracaoDeCodigo.escreverComandos("mov ax , " + F.lexema); 
 					geracaoDeCodigo.escreverComandos("mov DS:[" + F.endereco + "] " + ", ax");
 					//geracaoDeCodigo.contadorVariaveis += 1;
@@ -1446,14 +1446,14 @@ public class AnalisadorSintatico{
 						geracaoDeCodigo.escreverComandos("add di , " + idDeclarado.endereco);
 						geracaoDeCodigo.escreverComandos("mov ax , DS:[di]");
 						F.endereco = geracaoDeCodigo.novoTemp(2); 
-						System.out.println("F.endereco " + F.endereco + " Exp.enreco" + EXP.endereco + " idDE: " + idDeclarado.endereco);
+						//System.out.println("F.endereco " + F.endereco + " Exp.enreco" + EXP.endereco + " idDE: " + idDeclarado.endereco);
 						geracaoDeCodigo.escreverComandos("mov " + "DS:[" + F.endereco + "]" + " , ax");
 					}else if(idDeclarado.tipo == this.simbolo.Caracter_tipo){
 						geracaoDeCodigo.escreverComandos("mov di , " + "DS:[" + EXP.endereco + "]");
 						geracaoDeCodigo.escreverComandos("add di , " + idDeclarado.endereco);
 						geracaoDeCodigo.escreverComandos("mov ax , DS:[di]");
 						F.endereco = geracaoDeCodigo.novoTemp(1);
-						System.out.println(" Aqui F.endereco " + F.endereco + " Exp.enreco" + EXP.endereco + " idDE: " + idDeclarado.endereco);
+						//System.out.println(" Aqui F.endereco " + F.endereco + " Exp.enreco" + EXP.endereco + " idDE: " + idDeclarado.endereco);
 						geracaoDeCodigo.escreverComandos("mov " + "DS:[" + F.endereco + "]" + " , ax");
 					}
 				}

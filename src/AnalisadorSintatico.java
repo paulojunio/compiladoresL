@@ -457,15 +457,15 @@ public class AnalisadorSintatico{
 					geracaoDeCodigo.escreverComandos("mov DS:[" + idDeclarado.endereco + "], ax");
 				}else if (idDeclarado.tipo == simbolo.Caracter_tipo && idDeclarado.tamanho != 0){
 					int rotulo1 = geracaoDeCodigo.novoRotulo();
-					geracaoDeCodigo.escreverComandos("mov di, " + idDeclarado.endereco);
-					geracaoDeCodigo.escreverComandos("mov si, " + EXP.endereco);
+					geracaoDeCodigo.escreverComandos("mov di, " + EXP.endereco);
+					geracaoDeCodigo.escreverComandos("mov si, " + idDeclarado.endereco);
 					geracaoDeCodigo.escreverComandos("R" + rotulo1 + ":");
-					geracaoDeCodigo.escreverComandos("mov ax, DS:[si]");
-					geracaoDeCodigo.escreverComandos("mov ah, 0");
-					geracaoDeCodigo.escreverComandos("mov DS:[di], al");
+					geracaoDeCodigo.escreverComandos("mov bx, DS:[di]");
+					geracaoDeCodigo.escreverComandos("mov bh, 0");
+					geracaoDeCodigo.escreverComandos("mov DS:[si], bl");
 					geracaoDeCodigo.escreverComandos("add di, 1");
 					geracaoDeCodigo.escreverComandos("add si, 1");
-					geracaoDeCodigo.escreverComandos("cmp ax, 024h");
+					geracaoDeCodigo.escreverComandos("cmp bx, 24h");
 					geracaoDeCodigo.escreverComandos("jne R" + rotulo1);
 				}
 

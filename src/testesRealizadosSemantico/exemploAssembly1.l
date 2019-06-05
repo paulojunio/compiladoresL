@@ -5,13 +5,8 @@ Var integer n,b;
 Var char a;
 
 
-if( "True" = "True" ) then {
-    writeln("Tudo certo");
-}
+writeln("Tudo certo", 48, 'o');
 
-writeln("Tudo certo");
 readln(moises);
 
-if( moises = "Max") then {
-    writeln("Fedido");
-}
+if moises = "Max" then writeln("Deu");
